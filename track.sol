@@ -1,4 +1,5 @@
 pragma solidity ^0.4.0;
+
 contract Tracks {
     
     address public STracksOwner;
@@ -22,11 +23,11 @@ contract Tracks {
         STracksOwner = msg.sender;
     }
     
-    function saveOwnership(uint trackId, bytes32 trackName) returns (uint identifier){
+    function saveTrackDetails(uint trackId, bytes32 trackName) returns (uint identifier){
         STracks[trackId] = STrack(trackId, trackName);
     }
     
-    function saveAuthorToTrack(bytes32[] AuthorsDetails, uint trackId){
+    function saveAuthorDetailsToTrack(bytes32[] AuthorsDetails, uint trackId){
         STrack includeAuthor = STracks[trackId];
         
         for (uint i = 0; i < AuthorsDetails.length; i++){
@@ -35,4 +36,5 @@ contract Tracks {
             includeAuthor.Authors[i] = details;
         }
     }
+    
 }
