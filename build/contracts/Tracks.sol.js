@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("Migrations error: Please call setProvider() first before calling new().");
+      throw new Error("Tracks error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("Migrations error: contract binary not set. Can't deploy new instance.");
+      throw new Error("Tracks error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("Migrations contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Migrations: " + unlinked_libraries);
+      throw new Error("Tracks contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Tracks: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to Migrations.at(): " + address);
+      throw new Error("Invalid address passed to Tracks.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: Migrations not deployed or address not set.");
+      throw new Error("Cannot find deployed address: Tracks not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -350,39 +350,22 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   "default": {
     "abi": [
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "new_address",
-            "type": "address"
-          }
-        ],
-        "name": "upgrade",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-      },
-      {
         "constant": true,
-        "inputs": [],
-        "name": "last_completed_migration",
-        "outputs": [
+        "inputs": [
           {
             "name": "",
             "type": "uint256"
           }
         ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "owner",
+        "name": "STracks",
         "outputs": [
           {
-            "name": "",
-            "type": "address"
+            "name": "trackId",
+            "type": "uint256"
+          },
+          {
+            "name": "trackName",
+            "type": "bytes32"
           }
         ],
         "payable": false,
@@ -392,12 +375,73 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "constant": false,
         "inputs": [
           {
-            "name": "completed",
+            "name": "AuthorsDetails",
+            "type": "bytes32[]"
+          },
+          {
+            "name": "trackId",
             "type": "uint256"
           }
         ],
-        "name": "setCompleted",
+        "name": "saveAuthorDetailsToTrack",
         "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "trackId",
+            "type": "uint256"
+          },
+          {
+            "name": "trackName",
+            "type": "bytes32"
+          },
+          {
+            "name": "AuthorsDetails",
+            "type": "bytes32[]"
+          }
+        ],
+        "name": "saveTrackDetails",
+        "outputs": [
+          {
+            "name": "identifier",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "trackId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getTrackDetails",
+        "outputs": [
+          {
+            "name": "trackName",
+            "type": "bytes32"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "STracksOwner",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address"
+          }
+        ],
         "payable": false,
         "type": "function"
       },
@@ -406,9 +450,11 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "type": "constructor"
       }
     ],
-    "unlinked_binary": "0x606060405260008054600160a060020a0319163317905561014f806100246000396000f3606060405260e060020a60003504630900f010811461003f578063445df0ac146100ce5780638da5cb5b146100dc578063fdacd576146100f3575b610002565b346100025761011e60043560008054600160a060020a039081163390911614156100ca57604080516001547ffdacd576000000000000000000000000000000000000000000000000000000008252600482015290518392600160a060020a0384169263fdacd576926024828101939282900301818387803b156100025760325a03f115610002575050505b5050565b346100025761012060015481565b3461000257610132600054600160a060020a031681565b346100025761011e60043560005433600160a060020a039081169116141561011b5760018190555b50565b005b60408051918252519081900360200190f35b60408051600160a060020a03929092168252519081900360200190f3",
+    "unlinked_binary": "0x606060405260008054600160a060020a031916331790556102dc806100246000396000f3606060405260e060020a600035046356e17eb3811461004a5780636d09163f1461006f5780638108af55146100bd578063c146c55714610187578063d0a1d5ec146101b4575b610002565b34610002576101d8600435600260205260009081526040902080546001919091015482565b3461000257604080516004803580820135602081810280860182019096528185526101f195939460249490938501929182919085019084908082843750949650509335935061013c92505050565b346100025760408051604435600481810135602081810285810182019096528185526101a29583359560248035966064959294910192829185019084908082843750949650505050505050604080518082018252848152602081810185815260008781526002909252928120915182559151600191909101556102d582855b600081815260026020526040812090805b845182101561021d5750600180548082018083558291908281838015829011610224576000838152602090206102249181019083016102ad565b34610002576004356000908152600260205260409020600101545b60408051918252519081900360200190f35b34610002576101f360005473ffffffffffffffffffffffffffffffffffffffff1681565b6040805192835260208301919091528051918290030190f35b005b6040805173ffffffffffffffffffffffffffffffffffffffff929092168252519081900360200190f35b5050505050565b50505091909060005260206000209001600087858151811015610002576020908102909101810151909255506000848152600286018252604081208054855480835582845293909220859450909283928201918582156102a55760005260206000209182015b828111156102a557825482559160010191906001019061028a565b506102c59291505b808211156102c157600081556001016102ad565b5090565b505050506001919091019061014d565b939250505056",
     "events": {},
-    "updated_at": 1487568113895
+    "updated_at": 1487588672547,
+    "links": {},
+    "address": "0x9cc2a6d6964fc11e8fc23ac5606c0a716296ee19"
   }
 };
 
@@ -493,7 +539,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "Migrations";
+  Contract.contract_name   = Contract.prototype.contract_name   = "Tracks";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -533,6 +579,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.Migrations = Contract;
+    window.Tracks = Contract;
   }
 })();

@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("Tracks error: Please call setProvider() first before calling new().");
+      throw new Error("Migrations error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("Tracks error: contract binary not set. Can't deploy new instance.");
+      throw new Error("Migrations error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("Tracks contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Tracks: " + unlinked_libraries);
+      throw new Error("Migrations contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Migrations: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to Tracks.at(): " + address);
+      throw new Error("Invalid address passed to Migrations.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: Tracks not deployed or address not set.");
+      throw new Error("Cannot find deployed address: Migrations not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -350,64 +350,25 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   "default": {
     "abi": [
       {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "STracks",
-        "outputs": [
-          {
-            "name": "trackId",
-            "type": "uint256"
-          },
-          {
-            "name": "trackName",
-            "type": "bytes32"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
         "constant": false,
         "inputs": [
           {
-            "name": "AuthorsDetails",
-            "type": "bytes32[]"
-          },
-          {
-            "name": "trackId",
-            "type": "uint256"
+            "name": "new_address",
+            "type": "address"
           }
         ],
-        "name": "saveAuthorDetailsToTrack",
+        "name": "upgrade",
         "outputs": [],
         "payable": false,
         "type": "function"
       },
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "trackId",
-            "type": "uint256"
-          },
-          {
-            "name": "trackName",
-            "type": "bytes32"
-          },
-          {
-            "name": "AuthorsDetails",
-            "type": "bytes32[]"
-          }
-        ],
-        "name": "saveTrackDetails",
+        "constant": true,
+        "inputs": [],
+        "name": "last_completed_migration",
         "outputs": [
           {
-            "name": "identifier",
+            "name": "",
             "type": "uint256"
           }
         ],
@@ -417,7 +378,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       {
         "constant": true,
         "inputs": [],
-        "name": "STracksOwner",
+        "name": "owner",
         "outputs": [
           {
             "name": "",
@@ -428,13 +389,28 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "type": "function"
       },
       {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "completed",
+            "type": "uint256"
+          }
+        ],
+        "name": "setCompleted",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
         "inputs": [],
         "type": "constructor"
       }
     ],
-    "unlinked_binary": "0x606060405260008054600160a060020a031916331790556102b6806100246000396000f3606060405260e060020a600035046356e17eb3811461003f5780636d09163f146100645780638108af55146100b2578063d0a1d5ec1461017c575b610002565b34610002576101a0600435600260205260009081526040902080546001919091015482565b3461000257604080516004803580820135602081810280860182019096528185526101b995939460249490938501929182919085019084908082843750949650509335935061013192505050565b346100025760408051604435600481810135602081810285810182019096528185526101bb9583359560248035966064959294910192829185019084908082843750949650505050505050604080518082018252848152602081810185815260008781526002909252928120915182559151600191909101556102af82855b600081815260026020526040812090805b84518210156101f7575060018054808201808355829190828183801582901161020e5760008381526020902061020e918101908301610297565b34610002576101cd60005473ffffffffffffffffffffffffffffffffffffffff1681565b6040805192835260208301919091528051918290030190f35b005b60408051918252519081900360200190f35b6040805173ffffffffffffffffffffffffffffffffffffffff929092168252519081900360200190f35b5050505050565b5050505060019190910190610142565b505050919090600052602060002090016000878581518110156100025760209081029091018101519092555060008481526002860182526040812080548554808355828452939092208594509092839282019185821561028f5760005260206000209182015b8281111561028f578254825591600101919060010190610274565b506101fe9291505b808211156102ab5760008155600101610297565b5090565b939250505056",
+    "unlinked_binary": "0x606060405260008054600160a060020a0319163317905561014f806100246000396000f3606060405260e060020a60003504630900f010811461003f578063445df0ac146100ce5780638da5cb5b146100dc578063fdacd576146100f3575b610002565b346100025761011e60043560008054600160a060020a039081163390911614156100ca57604080516001547ffdacd576000000000000000000000000000000000000000000000000000000008252600482015290518392600160a060020a0384169263fdacd576926024828101939282900301818387803b156100025760325a03f115610002575050505b5050565b346100025761012060015481565b3461000257610132600054600160a060020a031681565b346100025761011e60043560005433600160a060020a039081169116141561011b5760018190555b50565b005b60408051918252519081900360200190f35b60408051600160a060020a03929092168252519081900360200190f3",
     "events": {},
-    "updated_at": 1487568113896
+    "updated_at": 1487588672545,
+    "address": "0x5db588fb5566134de4740e471410a8008b346dff",
+    "links": {}
   }
 };
 
@@ -519,7 +495,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "Tracks";
+  Contract.contract_name   = Contract.prototype.contract_name   = "Migrations";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -559,6 +535,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.Tracks = Contract;
+    window.Migrations = Contract;
   }
 })();

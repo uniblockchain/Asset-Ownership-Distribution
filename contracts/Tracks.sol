@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.2;
 
 contract Tracks {
 
@@ -33,5 +33,10 @@ contract Tracks {
       details.authorDetails.push(AuthorsDetails[i]);
       includeAuthor.Authors[i] = details;
     }
+  }
+
+  function getTrackDetails(uint trackId) returns (bytes32 trackName){
+    STrack trackDetails = STracks[trackId];
+    trackName = trackDetails.trackName;
   }
 }
