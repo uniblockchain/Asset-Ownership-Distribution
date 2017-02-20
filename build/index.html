@@ -3,21 +3,206 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Default Truffle App</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <title>SkyBlocks.io</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+
   <script src="./app.js"></script>
 </head>
 <body>
-  <span id="status"></span>
 
+  <div class="ui container">
+    <div class="ui hidden divider"></div>
+    <h1>SkyBlocks.io</h1>
+    <div class="ui grid">
+      <div class="ui eleven wide column">
 
-<input type="text" name="trackID" value="">
-<input type="text" name="name" value="">
-<textarea name="list" rows="8" cols="80"> </textarea>
+        <div class="ui segment">
+          <div class="ui form">
+            <div class="fields">
+              <div class="field">
+                <label>ISWC No.</label>
+                <input type="number" id="iswc-no" placeholder="ISWC No.">
+              </div>
+              <!-- <div class="field">
+              <label>Middle name</label>
+              <input type="text" placeholder="Middle Name">
+            </div>
+            <div class="field">
+            <label>Last name</label>
+            <input type="text" placeholder="Last Name">
+          </div> -->
+        </div>
 
-<button type="button" name="button" onclick="saveDetails()">Save now</button>
-<button type="button" name="button" onclick="getDetails()">Get now</button>
+        <div class="field">
+          <label>Song Name</label>
+          <input type="text" id="song-name" placeholder="Song Name">
+        </div>
+
+      </div>
+      <div class="ui segment">
+        <div class="ui accordion">
+          <h3>Right Holders</h3>
+
+          <div class="active title">
+            <i class="dropdown icon"></i>
+            Right Holder #1
+          </div>
+          <div class="active content">
+            <div class="ui form">
+              <div class="fields">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" id="name-1" placeholder="Name">
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" id="email-1" placeholder="Email">
+                </div>
+                <div class="field">
+                  <label>Ownership</label>
+                  <input type="number" id="per-1" placeholder="Ownership percentage">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Right Holder #2
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="fields">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" id="name-2" placeholder="Name">
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" id="email-2" placeholder="Email">
+                </div>
+                <div class="field">
+                  <label>Ownership</label>
+                  <input type="number" id="per-2" placeholder="Ownership percentage">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Right Holder #3
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="fields">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" id="name-3" placeholder="Name">
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" id="email-3" placeholder="Email">
+                </div>
+                <div class="field">
+                  <label>Ownership</label>
+                  <input type="number" id="per-3" placeholder="Ownership percentage">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Right Holder #4
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="fields">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" id="name-4" placeholder="Name">
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" id="email-4" placeholder="Email">
+                </div>
+                <div class="field">
+                  <label>Ownership</label>
+                  <input type="number" id="per-4" placeholder="Ownership percentage">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Right Holder #5
+          </div>
+          <div class="content">
+            <div class="ui form">
+              <div class="fields">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" id="name-5" placeholder="Name">
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" id="email-5" placeholder="Email">
+                </div>
+                <div class="field">
+                  <label>Ownership</label>
+                  <input type="number" id="per-5" placeholder="Ownership percentage">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="ui button green" type="button" id="saveme" name="button" onclick="saveDetails()">Save now</button>
+      <button class="ui button yellow" type="button" name="button" onclick="getDetails()">Get now</button>
+
+    </div>
+
+  </div>
+  <div class="ui five wide column">
+    <div class="ui segment">
+      <h3>Balance</h3>
+      <div id="status">...</div>
+    </div>
+
+    <div class="ui segment">
+      <h3>Txs</h3>
+      <div>
+        <ol id="txs"></ol>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="ui small modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Modal Title
+  </div>
+  <div class="image content">
+    <div class="image">
+      An image can appear on left or an icon
+    </div>
+    <div class="description">
+      A description can appear on the right
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button">Cancel</div>
+    <div class="ui button">OK</div>
+  </div>
+</div>
 
 </body>
 </html>
