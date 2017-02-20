@@ -159,7 +159,7 @@
         </div>
       </div>
 
-      <button class="ui button green" type="button" name="button" onclick="saveDetails()">Save now</button>
+      <button class="ui button green" type="button" id="saveme" name="button" onclick="saveDetails()">Save now</button>
       <button class="ui button yellow" type="button" name="button" onclick="getDetails()">Get now</button>
 
     </div>
@@ -170,9 +170,36 @@
       <h3>Balance</h3>
       <div id="status">...</div>
     </div>
+
+    <div class="ui segment">
+      <h3>Txs</h3>
+      <div>
+        <ol id="txs"></ol>
+      </div>
+    </div>
+
   </div>
 </div>
 
+</div>
+
+<div class="ui small modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Modal Title
+  </div>
+  <div class="image content">
+    <div class="image">
+      An image can appear on left or an icon
+    </div>
+    <div class="description">
+      A description can appear on the right
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button">Cancel</div>
+    <div class="ui button">OK</div>
+  </div>
 </div>
 
 </body>
