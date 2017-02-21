@@ -9,25 +9,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
   <script src="./app.js"></script>
-  <style>
-  .modal .content {
-    min-height: 200px;
-  }
-  </style>
 </head>
 <body>
-
+  
   <div class="ui container">
     <div class="ui hidden divider"></div>
     <h1>SkyBlocks.io</h1>
     <div class="ui stackable grid">
       <div class="ui eleven wide column">
         <div class="ui green segment">
-          <form action="" class="ui fluid big form">
+          <div action="#" id="thisfrm" method="POST" class="ui fluid big form">
             <div class="fields">
               <div class="field">
                 <label>ISWC No.</label>
-                <input type="number" name="iswc" id="iswc-no" placeholder="ISWC No.">
+                <input type="number" required name="iswc" id="iswc-no" placeholder="ISWC No.">
                 <!-- <span class="help">International Standard Name Identifier see www.isni.org </span> -->
               </div>
             </div>
@@ -36,7 +31,7 @@
               <label>Song Name</label>
               <div class="ui search">
                 <div class="ui icon input">
-                  <input class="prompt" type="text" id="song-name" placeholder="Search Song Name..." autocomplete="off" >
+                  <input class="prompt" type="text" name="songname" id="song-name" placeholder="Search Song Name..." autocomplete="off" >
                   <i class="search icon"></i>
                 </div>
                 <div class="results"></div>
@@ -68,7 +63,7 @@
                     </div>
                     <div class="field">
                       <label>Ownership</label>
-                      <input type="number" id="per-1" placeholder="Ownership percentage">
+                      <input type="number" min="1" max="100" id="per-1" placeholder="Ownership percentage">
                     </div>
                   </div>
                 </div>
@@ -94,7 +89,7 @@
                     </div>
                     <div class="field">
                       <label>Ownership</label>
-                      <input type="number" id="per-2" placeholder="Ownership percentage">
+                      <input type="number" min="1" max="100" id="per-2" placeholder="Ownership percentage">
                     </div>
                   </div>
                 </div>
@@ -120,7 +115,7 @@
                     </div>
                     <div class="field">
                       <label>Ownership</label>
-                      <input type="number" id="per-3" placeholder="Ownership percentage">
+                      <input type="number" min="1" max="100" id="per-3" placeholder="Ownership percentage">
                     </div>
                   </div>
                 </div>
@@ -147,7 +142,7 @@
                     </div>
                     <div class="field">
                       <label>Ownership</label>
-                      <input type="number" id="per-4" placeholder="Ownership percentage">
+                      <input type="number" min="1" max="100" id="per-4" placeholder="Ownership percentage">
                     </div>
                   </div>
                 </div>
@@ -174,18 +169,18 @@
                     </div>
                     <div class="field">
                       <label>Ownership</label>
-                      <input type="number" id="per-5" placeholder="Ownership percentage">
+                      <input type="number" min="1" max="100" id="per-5" placeholder="Ownership percentage">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="ui hidden divider"></div>
-            <button class="ui positive big button" type="button" id="saveme" name="button" onclick="saveDetails()">Save now</button>
+            <button class="ui positive big button" type="submit" id="saveme" name="button" onclick="saveDetails()">Save now</button>
 
             <div class="ui error message"></div>
           </div>
-        </form>
+        </div>
         <!--
         <button class="ui button yellow" type="button" name="button" onclick="getDetails()">Get now</button> -->
       </div>

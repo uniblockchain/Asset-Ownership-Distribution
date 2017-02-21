@@ -4,8 +4,14 @@ var account
 window.onload = function () {
   $('.ui.form')
   .form({
+    on: 'blur',
     fields: {
-      iswc: 'empty'
+      iswc: 'number',
+      songname: 'empty',
+      name1: 'empty',
+      songname: 'email',
+      songname: 'empty',
+      songname: 'empty'
     }
   })
 
@@ -28,7 +34,7 @@ window.onload = function () {
     { title: 'History' },
     { title: 'Stitches' },
     { title: 'Here' },
-    { title: 'Roar' },
+    // { title: 'Roar' },
     { title: 'Can\t Stop The Feeling' },
     { title: 'Secret Love Song' },
     { title: 'Cake By The Ocean' },
@@ -41,7 +47,7 @@ window.onload = function () {
     source: content
   })
 
-  getTx('0x1c2f7cbedb100ba133eacdaad06b66456ecb4a31ed4500ed9447f060f7405f32')
+  // getTx('0x1c2f7cbedb100ba133eacdaad06b66456ecb4a31ed4500ed9447f060f7405f32')
 
   // console.log(web3.eth.coinbase)
   // web3.eth.getAccounts(function (err, accs) {
@@ -91,6 +97,7 @@ function refreshBalance () {
 function saveDetails () {
   $('#saveme').addClass('disabled loading')
   var owners = []
+  var totp = 0
   var iswcno = $('#iswc-no').val()
   var songname = $('#song-name').val()
 
@@ -99,20 +106,23 @@ function saveDetails () {
     var e = $('#email-' + i).val()
     var p = $('#per-' + i).val()
     var i = $('#isni-' + i).val()
-    owners.push({'n': n, 'e': e, i: i, 'p': p})
+    totp = totp + p
+    owners.push({'n': n, 'e': e, 'i': i, 'p': p})
   }
-  $('input').val('')
-  var meta = Tracks.deployed()
-  var account_one = web3.eth.coinbase
-  var account_two = web3.eth.coinbase
+  console.log(totp)
 
-  meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
-    console.log(tx_id)
-    $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
-    $('#saveme').removeClass('disabled loading')
-  }).catch(function (e) {
-    $('#txs').append('<li>' + e + '</li>')
-  })
+  $('input').val('')
+  
+  // var meta = Tracks.deployed()
+  // var account_one = web3.eth.coinbase
+  // var account_two = web3.eth.coinbase
+  // meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
+  //   console.log(tx_id)
+  //   $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
+  //   $('#saveme').removeClass('disabled loading')
+  // }).catch(function (e) {
+  //   $('#txs').append('<li>' + e + '</li>')
+  // })
 }
 
 function getDetails () {
