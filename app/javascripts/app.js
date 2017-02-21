@@ -2,26 +2,48 @@ var accounts
 var account
 
 window.onload = function () {
+  $('.ui.form')
+  .form({
+    fields: {
+      iswc: 'empty'
+    }
+  })
+
   $('.ui.accordion').accordion()
 
+  getTx('0x1c2f7cbedb100ba133eacdaad06b66456ecb4a31ed4500ed9447f060f7405f32')
+
   // console.log(web3.eth.coinbase)
-  web3.eth.getAccounts(function (err, accs) {
-    if (err != null) {
-      alert('There was an error fetching your accounts.')
-      return
+  // web3.eth.getAccounts(function (err, accs) {
+  //   if (err != null) {
+  //     alert('There was an error fetching your accounts.')
+  //     return
+  //   }
+  //   if (accs.length == 0) {
+  //     alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+  //     return
+  //   }
+  //   accounts = accs
+  //   account = accounts[0]
+  //   refreshBalance()
+  // })
+}
+
+function getTx (txid) {
+  web3.eth.getTransaction(txid, function (errr, ress) {
+    if (errr) {
+      console.log('Error ' + errr)
     }
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
-      return
-    }
-    accounts = accs
-    account = accounts[0]
-    refreshBalance()
+    var str = web3.toAscii(ress.input)
+    var prettyStr = JSON.stringify(str, null, 2)
+    $('.ui.modal').modal('show')
+    $('#mhead').text('Tx. ' + txid)
+    $('#respData').html('<pre>' + JSON.stringify(ress, null, 2) + '</pre>')
   })
 }
 
 function initPopup () {
-  $('.small.modal').modal('show')
+  $('.ui.modal').modal('show')
 }
 
 function refreshBalance () {
@@ -46,7 +68,8 @@ function saveDetails () {
     var n = $('#name-' + i).val()
     var e = $('#email-' + i).val()
     var p = $('#per-' + i).val()
-    owners.push({'n': n, 'e': e, 'p': p})
+    var i = $('#isni-' + i).val()
+    owners.push({'n': n, 'e': e, i: i, 'p': p})
   }
   $('input').val('')
   var meta = Tracks.deployed()
@@ -54,6 +77,7 @@ function saveDetails () {
   var account_two = web3.eth.coinbase
 
   meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
+    console.log(tx_id)
     $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
     $('#saveme').removeClass('disabled loading')
   }).catch(function (e) {
