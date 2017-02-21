@@ -94,6 +94,7 @@ function refreshBalance () {
   document.getElementById('status').innerText = web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), 'ether')
 }
 
+
 function saveDetails () {
   $('#saveme').addClass('disabled loading')
   var owners = []
@@ -133,3 +134,28 @@ function getDetails () {
 function prettyPrintHash (hash, len) {
   return hash.slice(0, len) + '...' + hash.slice(hash.length - len, hash.length)
 }
+
+$(document).on('change', 'input.percentage', function() {
+  var sum = 0;
+  var limit = 0;
+  $('input.percentage').each(function() {
+    if (limit == 1) {
+      $(this).val(0);
+      $(this).attr("disabled","disabled");
+    } else {
+       $(this).removeAttr('disabled');
+      var thisval = Number($(this).val());
+      sum += thisval;
+      if (sum > 100){
+        sum = (sum - thisval);
+        $(this).val((100 - sum));
+        sum = 100;
+        limit = 1;
+      }
+      if (sum == 100){
+        limit = 1;
+      }
+    } 
+  });
+});
+
