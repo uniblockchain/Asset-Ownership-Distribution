@@ -11,6 +11,36 @@ window.onload = function () {
 
   $('.ui.accordion').accordion()
 
+  var content = [
+    { title: 'You Don\'t Know Love' },
+    { title: 'Shout Out To My Ex' },
+    { title: 'Work From Home' },
+    { title: 'Rockabye' },
+    { title: 'Anguilla' },
+    { title: '7 Years' },
+    { title: 'Fast Car' },
+    { title: 'Pillowalk' },
+    { title: 'Cheap Thrills' },
+    { title: 'All My Friends' },
+    { title: 'Get Ugly' },
+    { title: 'Light It Up' },
+    { title: 'Money' },
+    { title: 'History' },
+    { title: 'Stitches' },
+    { title: 'Here' },
+    { title: 'Roar' },
+    { title: 'Can\t Stop The Feeling' },
+    { title: 'Secret Love Song' },
+    { title: 'Cake By The Ocean' },
+    { title: 'This is what you came for' },
+    { title: 'Running With the Wild Things' },
+    { title: 'Do You Wanna Come Over?' }
+  ]
+
+  $('.ui.search').search({
+    source: content
+  })
+
   getTx('0x1c2f7cbedb100ba133eacdaad06b66456ecb4a31ed4500ed9447f060f7405f32')
 
   // console.log(web3.eth.coinbase)
