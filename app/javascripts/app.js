@@ -3,22 +3,22 @@ var account
 
 window.onload = function () {
   $('.ui.form')
-  .form({
-    on: 'blur',
-    fields: {
-      iswc: 'number',
-      songname: 'empty',
-      name1: 'empty',
-      songname: 'email',
-      songname: 'empty',
-      songname: 'empty'
-    }
-  })
+    .form({
+      on: 'blur',
+      fields: {
+        iswc: 'number',
+        songname: 'empty',
+        name1: 'empty',
+        songname: 'email',
+        songname: 'empty',
+        songname: 'empty'
+      }
+    })
 
   $('.ui.accordion').accordion()
 
   var content = [
-    { title: 'You Don\'t Know Love' },
+    { title: "You Don't Know Love" },
     { title: 'Shout Out To My Ex' },
     { title: 'Work From Home' },
     { title: 'Rockabye' },
@@ -49,20 +49,20 @@ window.onload = function () {
 
   // getTx('0x1c2f7cbedb100ba133eacdaad06b66456ecb4a31ed4500ed9447f060f7405f32')
 
-  // console.log(web3.eth.coinbase)
-  // web3.eth.getAccounts(function (err, accs) {
-  //   if (err != null) {
-  //     alert('There was an error fetching your accounts.')
-  //     return
-  //   }
-  //   if (accs.length == 0) {
-  //     alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
-  //     return
-  //   }
-  //   accounts = accs
-  //   account = accounts[0]
-  //   refreshBalance()
-  // })
+// console.log(web3.eth.coinbase)
+// web3.eth.getAccounts(function (err, accs) {
+//   if (err != null) {
+//     alert('There was an error fetching your accounts.')
+//     return
+//   }
+//   if (accs.length == 0) {
+//     alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+//     return
+//   }
+//   accounts = accs
+//   account = accounts[0]
+//   refreshBalance()
+// })
 }
 
 function getTx (txid) {
@@ -105,24 +105,24 @@ function saveDetails () {
     var n = $('#name-' + i).val()
     var e = $('#email-' + i).val()
     var p = $('#per-' + i).val()
-    var i = $('#isni-' + i).val()
+    var isni = $('#isni-' + i).val()
     totp = totp + p
-    owners.push({'n': n, 'e': e, 'i': i, 'p': p})
+    owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
   }
   console.log(totp)
 
   $('input').val('')
-  
-  // var meta = Tracks.deployed()
-  // var account_one = web3.eth.coinbase
-  // var account_two = web3.eth.coinbase
-  // meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
-  //   console.log(tx_id)
-  //   $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
-  //   $('#saveme').removeClass('disabled loading')
-  // }).catch(function (e) {
-  //   $('#txs').append('<li>' + e + '</li>')
-  // })
+
+// var meta = Tracks.deployed()
+// var account_one = web3.eth.coinbase
+// var account_two = web3.eth.coinbase
+// meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
+//   console.log(tx_id)
+//   $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
+//   $('#saveme').removeClass('disabled loading')
+// }).catch(function (e) {
+//   $('#txs').append('<li>' + e + '</li>')
+// })
 }
 
 function getDetails () {
