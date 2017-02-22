@@ -15,10 +15,15 @@ contract Tracks {
     STracksOwner = msg.sender;
   }
 
-  function saveTrackDetails(uint trackId, bytes32 trackName,bytes32[] AuthorsDetails) returns (uint identifier){
-    if (msg.sender == STracksOwner) {
-      STracks[trackId] = STrack(trackId, trackName, AuthorsDetails);
+  function saveTrackDetails(uint trackId, bytes32 trackName,bytes32[] AuthorsDetails) returns (bool identifier){
+    if (msg.sender != STracksOwner) {
+        return false;
     }
+    if (STracks[trackId].trackId != 0) {
+        return false;
+    }
+    STracks[trackId] = STrack(trackId, trackName, AuthorsDetails);
+    return true;
   }
 
   function getTrackDetails(uint trackId) returns (bytes32,bytes32[]){
