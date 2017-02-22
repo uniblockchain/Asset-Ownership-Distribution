@@ -95,7 +95,7 @@ function refreshBalance () {
 }
 
 function saveDetails () {
-  $('#saveme').addClass('disabled loading')
+  // $('#saveme').addClass('disabled loading')
   var owners = []
   var totp = 0
   var iswcno = $('#iswc-no').val()
@@ -104,25 +104,29 @@ function saveDetails () {
   for (var i = 1; i <= 5; i++) {
     var n = $('#name-' + i).val()
     var e = $('#email-' + i).val()
-    var p = $('#per-' + i).val()
+    var p = $('#per-' + i).text()
     var isni = $('#isni-' + i).val()
-    totp = totp + p
+    totp += p
     owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
   }
-  console.log(totp)
+  if (totp < 100) {
+    $('.error.message').text('Shares cannot be more than 100')
+    return
+  }
 
   $('input').val('')
 
-// var meta = Tracks.deployed()
-// var account_one = web3.eth.coinbase
-// var account_two = web3.eth.coinbase
-// meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
-//   console.log(tx_id)
-//   $('#txs').append('<li>' + prettyPrintHash(tx_id, 8) + '</li>')
-//   $('#saveme').removeClass('disabled loading')
-// }).catch(function (e) {
-//   $('#txs').append('<li>' + e + '</li>')
-// })
+  var meta = Tracks.deployed()
+  var account_one = web3.eth.coinbase
+  var account_two = web3.eth.coinbase
+  meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
+    console.log(tx_id)
+    $('#txs').append('<li data-tx="' + tx_id + '">' + prettyPrintHash(tx_id, 8) + '</li>')
+    initPopup()
+    $('#saveme').removeClass('disabled loading')
+  }).catch(function (e) {
+    $('#txs').append('<li>' + e + '</li>')
+  })
 }
 
 function getDetails () {
