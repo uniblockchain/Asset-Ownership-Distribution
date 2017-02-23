@@ -9,7 +9,15 @@ $(document).on('click', '#txs li', function () {
 $(document).ready(function () {
   $('#srchfrm').on('submit', function (e) {
     e.preventDefault()
-    alert($('#srchfrm input').val())
+    var iswcNo = $('#srchfrm input').val().trim()
+    console.log(iswcNo)
+    var trck = Tracks.deployed()
+    var account_one = web3.eth.coinbase
+    trck.getTrackDetails(iswcNo, {from: account_one}).then(function (tx_id) {
+      console.log(tx_id)
+    }).catch(function (e) {
+      $('#txs').append('<li>' + e + '</li>')
+    })
   })
 })
 
@@ -78,6 +86,7 @@ window.onload = function () {
 }
 
 function getTx (txid) {
+  console.log('getTx:' + getTx)
   web3.eth.getTransaction(txid, function (errr, ress) {
     if (errr) {
       console.log('Error ' + errr)
