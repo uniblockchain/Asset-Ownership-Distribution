@@ -8,13 +8,13 @@ $(document).on('click', '#txs li', function () {
 
 $(document).ready(function () {
   $('#srchfrm').on('submit', function (e) {
+    $('#scSearh').attr('disabled', true)
     e.preventDefault()
     var iswcNo = $('#srchfrm input').val().trim()
-    console.log(iswcNo)
     var trck = Tracks.deployed()
     var account_one = web3.eth.coinbase
-    trck.getTrackDetails(iswcNo, {from: account_one}).then(function (tx_id) {
-      console.log(tx_id)
+    trck.getTrackDetails(iswcNo).then(function (result) {
+      console.log(result)
     }).catch(function (e) {
       $('#txs').append('<li>' + e + '</li>')
     })
