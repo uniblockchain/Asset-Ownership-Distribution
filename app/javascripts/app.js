@@ -67,32 +67,30 @@ window.onload = function () {
     source: content
   })
 
-  // getTx('0xa01d964a00b57c502b83690870485e0aeef2983c2ea9777570625c446ddeeebb')
-
-// console.log(web3.eth.coinbase)
-  web3.eth.getAccounts(function (err, accs) {
-    if (err != null) {
-      alert('There was an error fetching your accounts.')
-      return
-    }
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
-      return
-    }
-    accounts = accs
-    account = accounts[0]
-    refreshBalance()
-  })
+  // web3.eth.getAccounts(function (err, accs) {
+  //   if (err != null) {
+  //     alert('There was an error fetching your accounts.')
+  //     return
+  //   }
+  //   if (accs.length == 0) {
+  //     alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+  //     return
+  //   }
+  //   accounts = accs
+  //   account = accounts[0]
+  //   refreshBalance()
+  // })
 }
 
 function getTx (txid) {
-  console.log('getTx:' + getTx)
+  console.log('getTx: ' + txid)
   web3.eth.getTransaction(txid, function (errr, ress) {
     if (errr) {
       console.log('Error ' + errr)
     }
     console.log(ress)
     var str = web3.toAscii(ress.input)
+    console.log(str)
 
     $('.ui.modal').modal('show')
     $('#mhead').text('Tx. ' + txid)
@@ -122,11 +120,14 @@ function saveDetails () {
   for (var i = 1; i <= 5; i++) {
     var n = $('#name-' + i).val()
     var e = $('#email-' + i).val()
-    var p = $('#per-' + i).text()
+    var p = $('#per-' + i).val()
     var isni = $('#isni-' + i).val()
     totp += p
+    console.log(p)
     owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
   }
+
+  console.dir(owners)
   // if (totp < 100) {
   //   $('.error.message').text('Shares cannot be more than 100')
   //   return

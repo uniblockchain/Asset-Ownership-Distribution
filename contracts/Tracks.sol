@@ -26,8 +26,8 @@ contract Tracks {
     return true;
   }
 
-  function getTrackDetails(uint trackId) returns (bytes32,bytes32[]){
+  function getTrackDetails(uint trackId) returns (uint, bytes32,bytes32[]){
     STrack trackDetails = STracks[trackId];
-    return (trackDetails.trackName,trackDetails.authorDetails);
+    return (trackId, trackDetails.trackName,trackDetails.authorDetails);
   }
 }
