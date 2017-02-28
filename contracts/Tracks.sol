@@ -1,33 +1,29 @@
 pragma solidity ^0.4.2;
 
 contract Tracks {
-
-  address public STracksOwner;
   struct STrack{
     uint trackId;
-    string trackName;
-    string authorDetails;
+    bytes32 trackName;
+    bytes32[] authorDetails;
   }
-
   STrack[] public STracks;
+  address public STracksOwner;
 
   function Tracks(){
     STracksOwner = msg.sender;
   }
 
-  function saveTrackDetails(uint trackId, string trackName,string AuthorsDetails) returns (bool identifier){
-    if (msg.sender != STracksOwner) {
-        return false;
-    }
-    if (STracks[trackId].trackId != 0) {
-        return false;
-    }
-    STracks[trackId] = STrack(trackId, trackName, AuthorsDetails);
+  function saveTrackDetails(uint _trackId, bytes32 _trackName,bytes32[] _AuthorsDetails) returns (bool success){
+    STrack memory newTrack;
+    newTrack.trackId = _trackId;
+    newTrack.trackName = _trackName;
+    newTrack.authorDetails = _AuthorsDetails;
+    STracks[_trackId] = newTrack;
     return true;
   }
 
-  function getTrackDetails(uint trackId) returns (uint, string, string){
-    STrack trackDetails = STracks[trackId];
-    return (trackId, trackDetails.trackName,trackDetails.authorDetails);
+  function getTrackDetails(uint _trackId) returns (uint, bytes32, bytes32[]){
+    STrack trackDetails = STracks[_trackId];
+    return (trackDetails.trackId, trackDetails.trackName,trackDetails.authorDetails);
   }
 }
