@@ -2,13 +2,13 @@ pragma solidity ^0.4.2;
 
 contract Trackdata {
 
-  mapping(uint => bytes32) trackDetails;
+  mapping(uint => string) trackDetails;
 
-  function saveTrackDetails(uint index, bytes32 _trackDetails){
+  function saveTrackDetails(uint index, string _trackDetails){
     trackDetails[index] = _trackDetails;
   }
 
-  function getTrackDetails(uint index) constant returns (bytes32 _trackDetails){
+  function getTrackDetails(uint index) constant returns (string _trackDetails){
     _trackDetails = trackDetails[index];
   }
 

@@ -5,3 +5,7 @@
 ol li {
   cursor: pointer;
 }
+
+.right.aligned.field {
+  text-align: right;
+}

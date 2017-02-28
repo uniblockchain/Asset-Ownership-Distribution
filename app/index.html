@@ -20,11 +20,16 @@
     <div class="ui stackable grid">
       <div class="ui eleven wide column">
         <div class="ui green segment">
+
           <div action="#" id="thisfrm" method="POST" class="ui fluid big form">
             <div class="fields">
               <div class="field">
                 <label>ISWC No.</label>
                 <input type="number" required name="iswc" id="iswc-no" placeholder="ISWC No.">
+              </div>
+              <div class="field right aligned">
+                <div class="ui hidden divider"></div>
+                <a onclick="fillDataPlease()" href="#">Fill Data</a>
               </div>
             </div>
 
@@ -191,7 +196,7 @@
           <h3>Search ISWC No.</h3>
           <form class="ui form" id="srchfrm">
             <div class="field">
-              <input type="number" required name="srchinput" placeholder="ISWC No.">
+              <input type="number" required id="srchinput" placeholder="ISWC No." value="6" disabled>
             </div>
             <button id="scSearh" class="ui fluid teal button" type="submit">Submit</button>
           </form>
@@ -201,7 +206,7 @@
           <h3>Txs</h3>
           <div>
             <ol id="txs" class="ui big relaxed ordered list">
-              <li data-tx="0x948da46ecfb01586b8264c25937793f7713a3e056c0300ab0debaf9daf4cc52a">0x948da4...af4cc52a</li>
+              <li data-tx="0x2c83a230284585e8e89fd0f2fc2ee7b5fe292555440f75fd5cc6537582f7adfd">0x2c83...2f7adfd</li>
             </ol>
           </div>
         </div>

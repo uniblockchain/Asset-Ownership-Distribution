@@ -7,17 +7,52 @@ $(document).on('click', '#txs li', function () {
 })
 
 $(document).ready(function () {
-  fillDataPleaase()
+  fillDataPlease()
+  var iswcNo
   $('#srchfrm').on('submit', function (e) {
-    $('#scSearh').attr('disabled', true)
     e.preventDefault()
-    var iswcNo = $('#srchfrm input').val().trim()
-    var trck = Tracks.deployed()
+    $('#scSearh').attr('disabled', true)
+    iswcNo = $('#srchinput').val().trim()
+    console.log(iswcNo)
+    var trck = Trackdata.deployed()
     var account_one = web3.eth.coinbase
+    $('#srchfrm input').val('')
+
     trck.getTrackDetails(iswcNo).then(function (result) {
       console.log(result)
+      $('#scSearh').attr('disabled', false)
+
+      if (result == '') {
+        $('.ui.modal').modal('show')
+        $('#mhead').text('Invalid ISWC No')
+        $('#respData').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
+      } else {
+        var retJson = JSON.parse(result)
+        $('.ui.modal').modal('show')
+        $('#mhead').text(retJson.songname)
+
+        var k = '<ul class="ui list">'
+
+        $.each(retJson.owners, function (key, value) {
+          console.log(value)
+
+          k += '<li value="*">' + key
+
+          k += '<ol>'
+          k += '<li value="-">' + value.n + '</li>'
+          k += '<li value="-">' + value.e + '</li>'
+          k += '<li value="-">' + value.i + '</li>'
+          k += '<li value="-">' + value.p + '</li>'
+          k += '</ol>'
+          k += '</li>'
+        })
+        k += '</ul>'
+
+        $('#respData').html('<p>ISWC No: ' + retJson.iswcNo + '</p><p>Song: ' + retJson.songname + '</p>' + k)
+      }
     }).catch(function (e) {
       $('#txs').append('<li>' + e + '</li>')
+      $('#scSearh').attr('disabled', false)
     })
   })
 })
@@ -55,7 +90,7 @@ window.onload = function () {
     { title: 'History' },
     { title: 'Stitches' },
     { title: 'Here' },
-    // { title: 'Roar' },
+    { title: 'Roar' },
     { title: 'Can\t Stop The Feeling' },
     { title: 'Secret Love Song' },
     { title: 'Cake By The Ocean' },
@@ -68,19 +103,19 @@ window.onload = function () {
     source: content
   })
 
-  // web3.eth.getAccounts(function (err, accs) {
-  //   if (err != null) {
-  //     alert('There was an error fetching your accounts.')
-  //     return
-  //   }
-  //   if (accs.length == 0) {
-  //     alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
-  //     return
-  //   }
-  //   accounts = accs
-  //   account = accounts[0]
-  //   refreshBalance()
-  // })
+  web3.eth.getAccounts(function (err, accs) {
+    if (err != null) {
+      alert('There was an error fetching your accounts.')
+      return
+    }
+    if (accs.length == 0) {
+      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+      return
+    }
+    accounts = accs
+    account = accounts[0]
+    refreshBalance()
+  })
 }
 
 function getTx (txid) {
@@ -89,10 +124,7 @@ function getTx (txid) {
     if (errr) {
       console.log('Error ' + errr)
     }
-    console.log(ress)
     var str = web3.toAscii(ress.input)
-    console.log(str)
-
     $('.ui.modal').modal('show')
     $('#mhead').text('Tx. ' + txid)
     $('#respData').html('<pre>' + str + '</pre>')
@@ -112,7 +144,8 @@ function refreshBalance () {
 }
 
 function saveDetails () {
-  $('#saveme').addClass('disabled loading')
+  var trackStr = {}
+  $('#thisfrm').addClass('loading')
   var owners = []
   var totp = 0
   var iswcno = $('#iswc-no').val().trim()
@@ -124,22 +157,28 @@ function saveDetails () {
     var p = $('#per-' + i).val()
     var isni = $('#isni-' + i).val()
     totp += p
-    console.log(p)
     owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
   }
 
-  ownersStr = JSON.stringify(owners)
+  var TrackData = {
+    'songname': songname,
+    'owners': owners
+  }
 
-  $('input').val('')
+  trackStr = JSON.stringify(TrackData)
+  $('#thisfrm input').val('')
 
-  var meta = Tracks.deployed()
+  console.log(iswcno)
+  console.log(TrackData)
+  console.log(trackStr)
+
+  var meta = Trackdata.deployed()
   var account_one = web3.eth.coinbase
   var account_two = web3.eth.coinbase
-  console.log(iswcno + ', "' + songname + '", ' + owners.toString())
-  meta.saveTrackDetails(iswcno, songname, ownersStr, {from: account_one}).then(function (tx_id) {
+  meta.saveTrackDetails(parseInt(iswcno), trackStr, {from: account_one}).then(function (tx_id) {
     console.log(tx_id)
     $('#txs').append('<li data-tx="' + tx_id + '">' + prettyPrintHash(tx_id, 8) + '</li>')
-    $('#saveme').removeClass('disabled loading')
+    $('#thisfrm').removeClass('loading')
   }).catch(function (e) {
     $('#txs').append('<li>' + e + '</li>')
   })
@@ -178,11 +217,34 @@ $(document).on('change', 'input.percentage', function () {
   })
 })
 
-function fillDataPleaase () {
-  $('#iswc-no').val('12')
+function fillDataPlease () {
+  $('#iswc-no').val(makeno(5))
   $('#song-name').val('Work From Home')
 
   for (var i = 1; i <= 5; i++) {
+    var n = $('#name-' + i).val(makeid(4))
     var p = $('#per-' + i).val(20)
+    var isni = $('#isni-' + i).val(makeno(5))
+    var e = $('#email-' + i).val(makeid() + '@gmail.com')
   }
+}
+
+function makeid () {
+  var text = ''
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+
+  for (var i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * 4))
+  }
+
+  return text
+}
+
+function makeno (len) {
+  var text = ''
+  var possible = '0123456789'
+  for (var i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * len))
+  }
+  return text
 }
