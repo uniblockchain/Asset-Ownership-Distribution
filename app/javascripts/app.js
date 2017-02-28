@@ -7,6 +7,7 @@ $(document).on('click', '#txs li', function () {
 })
 
 $(document).ready(function () {
+  fillDataPleaase()
   $('#srchfrm').on('submit', function (e) {
     $('#scSearh').attr('disabled', true)
     e.preventDefault()
@@ -127,18 +128,15 @@ function saveDetails () {
     owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
   }
 
-  console.dir(owners)
-  // if (totp < 100) {
-  //   $('.error.message').text('Shares cannot be more than 100')
-  //   return
-  // }
+  ownersStr = JSON.stringify(owners)
 
   $('input').val('')
 
   var meta = Tracks.deployed()
   var account_one = web3.eth.coinbase
   var account_two = web3.eth.coinbase
-  meta.saveTrackDetails(iswcno, songname, owners, {from: account_one}).then(function (tx_id) {
+  console.log(iswcno + ', "' + songname + '", ' + owners.toString())
+  meta.saveTrackDetails(iswcno, songname, ownersStr, {from: account_one}).then(function (tx_id) {
     console.log(tx_id)
     $('#txs').append('<li data-tx="' + tx_id + '">' + prettyPrintHash(tx_id, 8) + '</li>')
     $('#saveme').removeClass('disabled loading')
@@ -179,3 +177,12 @@ $(document).on('change', 'input.percentage', function () {
     }
   })
 })
+
+function fillDataPleaase () {
+  $('#iswc-no').val('12')
+  $('#song-name').val('Work From Home')
+
+  for (var i = 1; i <= 5; i++) {
+    var p = $('#per-' + i).val(20)
+  }
+}
