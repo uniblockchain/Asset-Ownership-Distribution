@@ -4,26 +4,30 @@ contract Tracks {
   struct STrack{
     uint trackId;
     bytes32 trackName;
-    bytes32[] authorDetails;
+    bytes32 authorDetails;
   }
   STrack[] public STracks;
+  uint trackCount;
   address public STracksOwner;
 
   function Tracks(){
     STracksOwner = msg.sender;
   }
 
-  function saveTrackDetails(uint _trackId, bytes32 _trackName,bytes32[] _AuthorsDetails) returns (bool success){
+  function saveTrackDetails(uint _trackId, bytes32 _trackName,bytes32 _AuthorsDetails) returns (uint success){
+    success = trackCount;
     STrack memory newTrack;
     newTrack.trackId = _trackId;
     newTrack.trackName = _trackName;
     newTrack.authorDetails = _AuthorsDetails;
-    STracks[_trackId] = newTrack;
-    return true;
+    STracks[trackCount] = newTrack;
+    trackCount++;
   }
 
-  function getTrackDetails(uint _trackId) returns (uint, bytes32, bytes32[]){
+  function getTrackDetails(uint _trackId) constant returns (uint trackId, bytes32 trackName, bytes32 authorDetails){
     STrack trackDetails = STracks[_trackId];
-    return (trackDetails.trackId, trackDetails.trackName,trackDetails.authorDetails);
+    trackName = trackDetails.trackName;
+    trackId =  trackDetails.trackId;
+    authorDetails =  trackDetails.authorDetails;
   }
 }
