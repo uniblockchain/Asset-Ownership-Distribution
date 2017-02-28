@@ -9,7 +9,7 @@ module.exports = {
     ]
   },
   rpc: {
-    host: '13.82.93.180',
+    host: '192.168.27.101',
     port: 8545
   }
 }
