@@ -1,9 +1,4 @@
 module.exports = {
-  build: {
-     working_directory: '.',
-     contracts_directory: 'contracts',
-     destination_directory: 'build'
-  },
   networks: {
     development: {
       host: '192.168.27.101',
