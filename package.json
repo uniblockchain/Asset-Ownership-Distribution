@@ -1,0 +1,22 @@
+{
+  "name": "skyblock",
+  "version": "1.0.0",
+  "description": "This is a simple Solidity Smart contract and a Decentralised application (DAPP).",
+  "main": "truffle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sibizulu/Asset-Ownership-Distribution.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sibizulu/Asset-Ownership-Distribution/issues"
+  },
+  "homepage": "https://github.com/sibizulu/Asset-Ownership-Distribution#readme",
+  "dependencies": {
+    "truffle-default-builder": "^2.0.0"
+  }
+}

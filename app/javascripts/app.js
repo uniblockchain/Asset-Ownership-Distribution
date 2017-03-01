@@ -13,13 +13,11 @@ $(document).ready(function () {
     e.preventDefault()
     $('#scSearh').attr('disabled', true)
     iswcNo = $('#srchinput').val().trim()
-    console.log(iswcNo)
-    var trck = Trackdata.deployed()
-    var account_one = web3.eth.coinbase
     $('#srchfrm input').val('')
 
-    trck.getTrackDetails(iswcNo).then(function (result) {
-      console.log(result)
+    Trackdata.deployed().then(function (instance) {
+      return instance.getTrackDetails(iswcNo)
+    }).then(function (result) {
       $('#scSearh').attr('disabled', false)
 
       if (result == '') {
@@ -28,17 +26,11 @@ $(document).ready(function () {
         $('#respData').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
       } else {
         var retJson = JSON.parse(result)
-        console.log(retJson)
         $('.ui.modal').modal('show')
         $('#mhead').text(retJson.songname)
-
         var k = '<ul class="ui list">'
-
         $.each(retJson.owners, function (key, value) {
-          console.log(value)
-
           k += '<li value="*">' + key
-
           k += '<ol>'
           k += '<li value="-">' + value.n + '</li>'
           k += '<li value="-">' + value.e + '</li>'
@@ -48,30 +40,13 @@ $(document).ready(function () {
           k += '</li>'
         })
         k += '</ul>'
-
         $('#respData').html('<p>ISWC No: ' + retJson.iswcno + '</p><p>Song: ' + retJson.songname + '</p>' + k)
-      }
-    }).catch(function (e) {
-      $('#txs').append('<li>' + e + '</li>')
-      $('#scSearh').attr('disabled', false)
+      }s
     })
   })
 })
 
 window.onload = function () {
-  $('.ui.form')
-    .form({
-      on: 'blur',
-      fields: {
-        iswc: 'number',
-        songname: 'empty',
-        name1: 'empty',
-        songname: 'email',
-        songname: 'empty',
-        songname: 'empty'
-      }
-    })
-
   $('.ui.accordion').accordion()
 
   var content = [
@@ -173,15 +148,14 @@ function saveDetails () {
   console.log('Saved Id :' + iswcno)
   console.log(trackStr)
 
-  var meta = Trackdata.deployed()
   var account_one = web3.eth.coinbase
   var account_two = web3.eth.coinbase
-  window.meta = meta
-  meta.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999}).then(function (tx_id) {
-    $('#txs').append('<li data-tx="' + tx_id + '">' + prettyPrintHash(tx_id, 8) + '</li>')
-    $('#thisfrm').removeClass('loading')
-  }).catch(function (e) {
-    $('#txs').append('<li>' + e + '</li>')
+
+  Trackdata.deployed().then(function (instance) {
+    return instance.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999})
+  }).then(function (result) {
+    console.log(result)
+    $('#txs').append('<li data-tx="' + result.tx + '">' + prettyPrintHash(result.tx, 8) + '</li>')
   })
 }
 
