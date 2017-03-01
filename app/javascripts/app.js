@@ -28,6 +28,7 @@ $(document).ready(function () {
         $('#respData').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
       } else {
         var retJson = JSON.parse(result)
+        console.log(retJson)
         $('.ui.modal').modal('show')
         $('#mhead').text(retJson.songname)
 
@@ -48,7 +49,7 @@ $(document).ready(function () {
         })
         k += '</ul>'
 
-        $('#respData').html('<p>ISWC No: ' + retJson.iswcNo + '</p><p>Song: ' + retJson.songname + '</p>' + k)
+        $('#respData').html('<p>ISWC No: ' + retJson.iswcno + '</p><p>Song: ' + retJson.songname + '</p>' + k)
       }
     }).catch(function (e) {
       $('#txs').append('<li>' + e + '</li>')
@@ -119,7 +120,7 @@ window.onload = function () {
 }
 
 function getTx (txid) {
-  console.log('getTx: ' + txid)
+  var trck = Trackdata.deployed()
   web3.eth.getTransaction(txid, function (errr, ress) {
     if (errr) {
       console.log('Error ' + errr)
@@ -148,7 +149,7 @@ function saveDetails () {
   $('#thisfrm').addClass('loading')
   var owners = []
   var totp = 0
-  var iswcno = $('#iswc-no').val().trim()
+  var iswcno = parseInt($('#iswc-no').val().trim())
   var songname = $('#song-name').val().trim()
 
   for (var i = 1; i <= 5; i++) {
@@ -161,22 +162,22 @@ function saveDetails () {
   }
 
   var TrackData = {
-    'songname': songname,
-    'owners': owners
+    iswcno: iswcno,
+    songname: songname,
+    owners: owners
   }
 
   trackStr = JSON.stringify(TrackData)
-  $('#thisfrm input').val('')
 
-  console.log(iswcno)
-  console.log(TrackData)
+  $('#thisfrm input').val('')
+  console.log('Saved Id :' + iswcno)
   console.log(trackStr)
 
   var meta = Trackdata.deployed()
   var account_one = web3.eth.coinbase
   var account_two = web3.eth.coinbase
-  meta.saveTrackDetails(parseInt(iswcno), trackStr, {from: account_one}).then(function (tx_id) {
-    console.log(tx_id)
+  window.meta = meta
+  meta.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999}).then(function (tx_id) {
     $('#txs').append('<li data-tx="' + tx_id + '">' + prettyPrintHash(tx_id, 8) + '</li>')
     $('#thisfrm').removeClass('loading')
   }).catch(function (e) {
@@ -225,7 +226,7 @@ function fillDataPlease () {
     var n = $('#name-' + i).val(makeid(4))
     var p = $('#per-' + i).val(20)
     var isni = $('#isni-' + i).val(makeno(5))
-    var e = $('#email-' + i).val(makeid() + '@gmail.com')
+    var e = $('#email-' + i).val(makeid() + '@me.com')
   }
 }
 
