@@ -11,8 +11,8 @@ module.exports = {
     ]
   }),
   networks: {
-    azurelocal: {
-      host: 'localhost',
+    azure: {
+      host: '13.82.93.180',
       port: 8545,
       network_id: '10101010'
     },
@@ -26,10 +26,6 @@ module.exports = {
       port: 80,
       network_id: '*'
     },
-    azure: {
-      host: '13.82.93.180',
-      port: 8545,
-      network_id: '*'
-    }
+
   }
 }
