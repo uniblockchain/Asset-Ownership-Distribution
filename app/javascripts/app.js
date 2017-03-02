@@ -7,7 +7,6 @@ $(document).on('click', '#txs li', function () {
 })
 
 $(document).ready(function () {
-  fillDataPlease()
   var iswcNo
   $('#srchfrm').on('submit', function (e) {
     e.preventDefault()
@@ -15,32 +14,36 @@ $(document).ready(function () {
     iswcNo = $('#srchinput').val().trim()
     $('#srchfrm input').val('')
 
+    if (iswcNo === '') {
+      $('#scSearh').attr('disabled', false)
+      return
+    }
+
     Trackdata.deployed().then(function (instance) {
       return instance.getTrackDetails(iswcNo)
     }).then(function (result) {
       $('#scSearh').attr('disabled', false)
 
       if (result == '') {
-        $('.ui.modal').modal('show')
         $('#mhead').text('Invalid ISWC No')
         $('#respData').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
+
+        $('.ui.modal').modal('show')
       } else {
         var retJson = JSON.parse(result)
         $('.ui.modal').modal('show')
-        $('#mhead').text(retJson.songname)
-        var k = '<ul class="ui list">'
+        $('#mhead').text(retJson.songname + ' - ISWC: ' + retJson.iswcno)
+        var k = '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th> </tr> </thead> <tbody>'
         $.each(retJson.owners, function (key, value) {
-          k += '<li value="*">' + key
-          k += '<ol>'
-          k += '<li value="-">' + value.n + '</li>'
-          k += '<li value="-">' + value.e + '</li>'
-          k += '<li value="-">' + value.i + '</li>'
-          k += '<li value="-">' + value.p + '</li>'
-          k += '</ol>'
-          k += '</li>'
+          k += '<tr>'
+          k += '<td >' + value.n + '</td>'
+          k += '<td >' + value.e + '</td>'
+          k += '<td >' + value.i + '</td>'
+          k += '<td >' + value.p + '</td>'
+          k += '</tr>'
         })
-        k += '</ul>'
-        $('#respData').html('<p>ISWC No: ' + retJson.iswcno + '</p><p>Song: ' + retJson.songname + '</p>' + k)
+        k += '</tbody></table>'
+        $('#respData').html(k)
       }s
     })
   })
@@ -145,9 +148,6 @@ function saveDetails () {
   trackStr = JSON.stringify(TrackData)
 
   $('#thisfrm input').val('')
-  console.log('Saved Id :' + iswcno)
-  console.log(trackStr)
-
   var account_one = web3.eth.coinbase
   var account_two = web3.eth.coinbase
 
