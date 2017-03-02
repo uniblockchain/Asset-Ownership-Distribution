@@ -155,6 +155,7 @@ function saveDetails () {
     return instance.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999})
   }).then(function (result) {
     console.log(result)
+    $('#thisfrm').removeClass('loading')
     $('#txs').append('<li data-tx="' + result.tx + '">' + prettyPrintHash(result.tx, 8) + '</li>')
   })
 }
