@@ -14,7 +14,7 @@ module.exports = {
     azurelocal: {
       host: 'localhost',
       port: 8545,
-      network_id: '*'
+      network_id: '10101010'
     },
     development: {
       host: '192.168.27.101',
