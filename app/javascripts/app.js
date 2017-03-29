@@ -7,6 +7,9 @@ $(document).on('click', '#txs li', function () {
 })
 
 $(document).ready(function () {
+  $('.ui.dropdown')
+  .dropdown()
+;
   var iswcNo
   $('#srchfrm').on('submit', function (e) {
     e.preventDefault()
