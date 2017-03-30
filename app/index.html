@@ -19,7 +19,7 @@
     <h1><a href="/">SkyBlocks.io</a></h1>
     <div class="ui stackable grid">
       <div class="ui eleven wide column">
-        <div class="ui green segment">
+        <div id="container-wrapper" class="ui green segment">
 
           <div action="#" id="thisfrm" method="POST" class="ui fluid big form">
             <div class="fields">
@@ -205,21 +205,27 @@
         <div class="ui orange segment">
           <h3>Calculation</h3>
           <form class="ui form" id="calculatefrm">
+          <input type="hidden" name="iswc" id="hidden_iswc" value="">
             <div class="field">
-              <select class="ui dropdown">
+              <select class="ui dropdown" id="type" disabled="disabled">
                 <option value="">Type</option>
-                <option value="1">Download</option>
-                <option value="0">Stream</option>
+                <option value="download">Download</option>
+                <option value="stream">Stream</option>
               </select>
-
             </div>
+           
             <div class="field">
               <label>Amount</label>
-              <input type="number" id="isni-5" placeholder="Amount.">
+              <div class="ui right labeled input">
+                <div class="ui label">$</div>
+                <input type="number" id="amount" placeholder="Amount" disabled="disabled">
+                <div class="ui basic label">.00</div>
+              </div>
             </div>
+
             <div class="field">
               <label>Count</label>
-              <input type="number" id="isni-5" placeholder="Count.">
+              <input type="number" id="count" placeholder="Count." disabled="disabled">
             </div>
             <button id="scSearh" class="ui fluid teal button" type="submit">Submit</button>
           </form>
