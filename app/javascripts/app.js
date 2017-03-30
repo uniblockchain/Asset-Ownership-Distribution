@@ -22,34 +22,72 @@ $(document).ready(function () {
       return
     }
 
-    Trackdata.deployed().then(function (instance) {
-      return instance.getTrackDetails(iswcNo)
-    }).then(function (result) {
-      $('#scSearh').attr('disabled', false)
-
-      if (result == '') {
-        $('#mhead').text('Invalid ISWC No')
-        $('#respData').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
-
-        $('.ui.modal').modal('show')
-      } else {
-        var retJson = JSON.parse(result)
-        $('.ui.modal').modal('show')
-        $('#mhead').text(retJson.songname + ' - ISWC: ' + retJson.iswcno)
-        var k = '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th> </tr> </thead> <tbody>'
-        $.each(retJson.owners, function (key, value) {
-          k += '<tr>'
-          k += '<td >' + value.n + '</td>'
-          k += '<td >' + value.e + '</td>'
-          k += '<td >' + value.i + '</td>'
-          k += '<td >' + value.p + '</td>'
-          k += '</tr>'
-        })
-        k += '</tbody></table>'
-        $('#respData').html(k)
-      }s
-    })
+   loadTrackdata(iswcNo)
+   $('#calculatefrm').find('input, button, select').attr('disabled',false);
+   $('#calculatefrm').find('input, button').removeClass('disabled')
+  $('#calculatefrm .ui.dropdown.selection').removeClass('disabled')
+   $('#hidden_iswc').val(iswcNo)
   })
+
+  function loadTrackdata(iswcNo, totalAmount = 0){
+
+   Trackdata.deployed().then(function (instance) {
+     $('#container-wrapper').addClass('loading')
+    return instance.getTrackDetails(iswcNo)
+  }).then(function (result) {
+
+    if (result == '') {
+      $('#mhead').text('Invalid ISWC No')
+      $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
+    } else {
+      var retJson = JSON.parse(result)
+     var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>';
+      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th>'
+      k += (totalAmount > 0) ? '<th>Amount</th>' : ''
+      k += '</tr> </thead> <tbody>'
+      $.each(retJson.owners, function (key, value) {
+        k += '<tr>'
+        k += '<td >' + value.n + '</td>'
+        k += '<td >' + value.e + '</td>'
+        k += '<td >' + value.i + '</td>'
+        k += '<td >' + value.p + '</td>'
+
+        if(totalAmount > 0) {
+          var perc = (totalAmount * value.p / 100)
+          k += '<td>'+perc+'</div></div></td>'
+        }
+
+        k += '</tr>'
+      })
+      k += '</tbody>'
+
+      if (totalAmount > 0){
+        k += '<tfoot class="full-width"><tr><th colspan="4">Total</th><th>'+totalAmount+'</th></tr></tfoot>'
+      }
+
+      k += '</table>'
+      $('#container-wrapper').html(k)
+    }
+    $('#container-wrapper').removeClass('loading')
+  })
+
+  }
+
+$('#calculatefrm').on('submit', function (e) {
+
+    e.preventDefault()
+
+    var type = $('#type :selected').val()
+    var amount = $('#amount').val()
+    var count = $('#count').val()
+    var iswcNo = $('#hidden_iswc').val()
+   
+    var totalamount = amount * count
+
+    loadTrackdata(iswcNo, totalamount)
+
+  }) 
+
 })
 
 window.onload = function () {
