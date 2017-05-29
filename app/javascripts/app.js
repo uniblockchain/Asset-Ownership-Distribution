@@ -134,6 +134,12 @@ window.onload = function () {
     account = accounts[0]
     refreshBalance()
   })
+
+  // Set settings
+  // Trackdata.deployed().then(function (instance) {
+  //   console.log(instance)
+  //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
+  // })
 }
 
 function getTx (txid) {
@@ -209,6 +215,12 @@ function prettyPrintHash (hash, len) {
 }
 
 $(document).on('change', 'select#type', function () {
+  Trackdata.deployed().then(function (instance) {
+    return instance.getSettings({from: web3.eth.coinbase, gas: 999999})
+  }).then(function (result) {
+    console.log(result)
+  })
+
   $('#amount').val(perRate[this.value])
   $('#amount_label').html('$' + perRate[this.value])
 })
