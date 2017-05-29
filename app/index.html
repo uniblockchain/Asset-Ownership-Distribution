@@ -206,21 +206,17 @@
           <h3>Calculation</h3>
           <form class="ui form" id="calculatefrm">
           <input type="hidden" name="iswc" id="hidden_iswc" value="">
-            <div class="field">
+          <input type="hidden" name="amount" id="amount" value="">
+
+            <div class="field ui input">
               <select class="ui dropdown" id="type" disabled="disabled">
                 <option value="">Type</option>
                 <option value="download">Download</option>
                 <option value="stream">Stream</option>
               </select>
-            </div>
-           
-            <div class="field">
-              <label>Amount</label>
-              <div class="ui right labeled input">
-                <div class="ui label">$</div>
-                <input type="number" id="amount" placeholder="Amount" disabled="disabled">
-                <div class="ui basic label">.00</div>
-              </div>
+              <a class="ui tag label" id="amount_label">
+                $0
+              </a>
             </div>
 
             <div class="field">
