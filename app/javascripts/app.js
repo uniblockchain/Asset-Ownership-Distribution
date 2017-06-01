@@ -39,6 +39,7 @@ $(document).ready(function () {
     $('#calculatefrm').find('input, button').removeClass('disabled')
     $('#calculatefrm .ui.dropdown.selection').removeClass('disabled')
     $('#hidden_iswc').val(iswcNo)
+    $('#scSearh').attr('disabled', false)
   })
 
   $('#calculatefrm').on('submit', function (e) {
@@ -107,7 +108,6 @@ window.onload = function () {
 
   // Set settings
   //   Trackdata.deployed().then(function (instance) {
-  //   console.log(instance)
   //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
   // })
 }
@@ -169,15 +169,9 @@ function saveDetails () {
   Trackdata.deployed().then(function (instance) {
     return instance.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999})
   }).then(function (result) {
-    console.log(result)
     $('#thisfrm').removeClass('loading')
     $('#txs').append('<li data-tx="' + result.tx + '">' + prettyPrintHash(result.tx, 8) + '</li>')
   })
-}
-
-function getDetails () {
-  var meta = Tracks.deployed()
-  console.log(meta.STrack[10])
 }
 
 function prettyPrintHash (hash, len) {
@@ -245,21 +239,20 @@ function loadTrackdata (iswcNo) {
     $('#container-wrapper').addClass('loading')
     return instance.getTrackDetails(iswcNo)
   }).then(function (result) {
-    console.log(result)
     if (result == '') {
       $('#mhead').text('Invalid ISWC No')
       $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
     } else {
       var retJson = JSON.parse(result)
       var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
-      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th>'
+      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th class="right aligned">Ownership</th>'
       k += '</tr> </thead> <tbody>'
       $.each(retJson.owners, function (key, value) {
         k += '<tr>'
         k += '<td >' + value.n + '</td>'
         k += '<td >' + value.e + '</td>'
         k += '<td >' + value.i + '</td>'
-        k += '<td >' + value.p + '</td>'
+        k += '<td class="right aligned">' + value.p + '</td>'
         k += '</tr>'
       })
       k += '</tbody>'
@@ -281,14 +274,15 @@ function loadTrackdataReport (iswcNo, total) {
     } else {
       var retJson = JSON.parse(result)
       var k = '<h2><i class="info circle icon"></i> Report Stats</h2>'
-      k += '<table class="ui single line table"><thead><tr><th>Name</th><th>Download</th><th>Stream</th></tr></thead><tbody>'
+      k += '<table class="ui single line table"><thead><tr><th>Name</th><th class="right aligned">Download (<i class="dollar icon"></i>)</th><th class="right aligned">Stream (<i class="dollar icon"></i>)</th></tr></thead><tbody>'
       $.each(retJson.owners, function (key, value) {
         k += '<tr>'
         k += '<td >' + value.n + ' <span class="ui left pointing basic label">' + value.i + '</span>' + '</td>'
-        k += '<td >' + value.p / 100 * total['download'] + '</td>'
-        k += '<td >' + value.p / 100 * total['stream'] + '</td>'
+        k += '<td class="right aligned">' + value.p / 100 * total['download'] + '</td>'
+        k += '<td class="right aligned">' + value.p / 100 * total['stream'] + '</td>'
         k += '</tr>'
       })
+      k += '<tfoot><tr><th><b>Total</b></th><th class="right aligned">' + total['download'] + '</th><th class="right aligned">' + total['stream'] + '</th></tr></tfoot>'
       k += '</tbody>'
       k += '</table>'
       $('#container-report').html(k)
