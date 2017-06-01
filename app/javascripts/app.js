@@ -1,10 +1,6 @@
 var accounts
 var account
 
-var perRate = {
-  'download': 0.091,
-  'stream': 0.0011
-}
 $(document).on('click', '#txs li', function () {
   var txnid = $(this).attr('data-tx')
   getTx(txnid)
@@ -26,6 +22,18 @@ $(document).ready(function () {
       return
     }
 
+    Trackdata.deployed().then(function (instance) {
+      return instance.getSettings()
+    }).then(function (result) {
+      var perRate = {
+        'download': result[0],
+        'stream': result[1]
+      }
+      $('#download_label').html('$ ' + perRate['download'])
+      $('#stream_label').html('$ ' + perRate['stream'])
+      $('#download').val(perRate['download'])
+      $('#stream').val(perRate['stream'])
+    })
     loadTrackdata(iswcNo)
     $('#calculatefrm').find('input, button, select').attr('disabled', false)
     $('#calculatefrm').find('input, button').removeClass('disabled')
@@ -33,58 +41,20 @@ $(document).ready(function () {
     $('#hidden_iswc').val(iswcNo)
   })
 
-  function loadTrackdata (iswcNo, totalAmount = 0) {
-    Trackdata.deployed().then(function (instance) {
-      $('#container-wrapper').addClass('loading')
-      return instance.getTrackDetails(iswcNo)
-    }).then(function (result) {
-      if (result == '') {
-        $('#mhead').text('Invalid ISWC No')
-        $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
-      } else {
-        var retJson = JSON.parse(result)
-        var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
-        k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th>'
-        k += (totalAmount > 0) ? '<th>Amount</th>' : ''
-        k += '</tr> </thead> <tbody>'
-        $.each(retJson.owners, function (key, value) {
-          k += '<tr>'
-          k += '<td >' + value.n + '</td>'
-          k += '<td >' + value.e + '</td>'
-          k += '<td >' + value.i + '</td>'
-          k += '<td >' + value.p + '</td>'
-
-          if (totalAmount > 0) {
-            var perc = (totalAmount * value.p / 100)
-            k += '<td>' + perc + '</div></div></td>'
-          }
-
-          k += '</tr>'
-        })
-        k += '</tbody>'
-
-        if (totalAmount > 0) {
-          k += '<tfoot class="full-width"><tr><th colspan="4">Total</th><th>' + totalAmount + '</th></tr></tfoot>'
-        }
-
-        k += '</table>'
-        $('#container-wrapper').html(k)
-      }
-      $('#container-wrapper').removeClass('loading')
-    })
-  }
-
   $('#calculatefrm').on('submit', function (e) {
     e.preventDefault()
 
-    var type = $('#type :selected').val()
-    var amount = $('#amount').val()
+    var download = parseFloat($('#download').val())
+    var stream = parseFloat($('#stream').val())
     var count = $('#count').val()
     var iswcNo = $('#hidden_iswc').val()
 
-    var totalamount = amount * count
+    var total = {
+      'download': download * count,
+      'stream': stream * count
+    }
 
-    loadTrackdata(iswcNo, totalamount)
+    loadTrackdataReport(iswcNo, total)
   })
 })
 
@@ -136,7 +106,7 @@ window.onload = function () {
   })
 
   // Set settings
-  // Trackdata.deployed().then(function (instance) {
+  //   Trackdata.deployed().then(function (instance) {
   //   console.log(instance)
   //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
   // })
@@ -214,17 +184,6 @@ function prettyPrintHash (hash, len) {
   return hash.slice(0, len) + '...' + hash.slice(hash.length - len, hash.length)
 }
 
-$(document).on('change', 'select#type', function () {
-  Trackdata.deployed().then(function (instance) {
-    return instance.getSettings({from: web3.eth.coinbase, gas: 999999})
-  }).then(function (result) {
-    console.log(result)
-  })
-
-  $('#amount').val(perRate[this.value])
-  $('#amount_label').html('$' + perRate[this.value])
-})
-
 $(document).on('change', 'input.percentage', function () {
   var sum = 0
   var limit = 0
@@ -279,4 +238,61 @@ function makeno (len) {
     text += possible.charAt(Math.floor(Math.random() * len))
   }
   return text
+}
+
+function loadTrackdata (iswcNo) {
+  Trackdata.deployed().then(function (instance) {
+    $('#container-wrapper').addClass('loading')
+    return instance.getTrackDetails(iswcNo)
+  }).then(function (result) {
+    console.log(result)
+    if (result == '') {
+      $('#mhead').text('Invalid ISWC No')
+      $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
+    } else {
+      var retJson = JSON.parse(result)
+      var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
+      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th>Ownership</th>'
+      k += '</tr> </thead> <tbody>'
+      $.each(retJson.owners, function (key, value) {
+        k += '<tr>'
+        k += '<td >' + value.n + '</td>'
+        k += '<td >' + value.e + '</td>'
+        k += '<td >' + value.i + '</td>'
+        k += '<td >' + value.p + '</td>'
+        k += '</tr>'
+      })
+      k += '</tbody>'
+      k += '</table>'
+      $('#container-wrapper').html(k)
+    }
+    $('#container-wrapper').removeClass('loading')
+  })
+}
+
+function loadTrackdataReport (iswcNo, total) {
+  Trackdata.deployed().then(function (instance) {
+    $('#container-wrapper').addClass('loading')
+    return instance.getTrackDetails(iswcNo)
+  }).then(function (result) {
+    if (result == '') {
+      $('#mhead').text('Invalid ISWC No')
+      $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
+    } else {
+      var retJson = JSON.parse(result)
+      var k = '<h2><i class="info circle icon"></i> Report Stats</h2>'
+      k += '<table class="ui single line table"><thead><tr><th>Name</th><th>Download</th><th>Stream</th></tr></thead><tbody>'
+      $.each(retJson.owners, function (key, value) {
+        k += '<tr>'
+        k += '<td >' + value.n + ' <span class="ui left pointing basic label">' + value.i + '</span>' + '</td>'
+        k += '<td >' + value.p / 100 * total['download'] + '</td>'
+        k += '<td >' + value.p / 100 * total['stream'] + '</td>'
+        k += '</tr>'
+      })
+      k += '</tbody>'
+      k += '</table>'
+      $('#container-report').html(k)
+    }
+    $('#container-wrapper').removeClass('loading')
+  })
 }
