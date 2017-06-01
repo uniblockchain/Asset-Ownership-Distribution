@@ -10,10 +10,9 @@ contract Trackdata {
     settings['stream'] = stream;
   }
 
-  function getSettings() returns (string download, string stream){
+  function getSettings() constant returns (string download, string stream){
     download = settings['download'];
     stream = settings['stream'];
-    return (download, stream);
   }
 
   function saveTrackDetails(uint index, string _trackDetails){
