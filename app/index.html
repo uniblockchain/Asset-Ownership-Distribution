@@ -187,6 +187,8 @@
             <div class="ui error message"></div>
           </div>
         </div>
+        <div id="container-report"></div>
+
         <!--
         <button class="ui button yellow" type="button" name="button" onclick="getDetails()">Get now</button> -->
       </div>
@@ -206,17 +208,20 @@
           <h3>Calculation</h3>
           <form class="ui form" id="calculatefrm">
           <input type="hidden" name="iswc" id="hidden_iswc" value="">
-          <input type="hidden" name="amount" id="amount" value="">
+          <input type="hidden" name="download" id="download" value="">
+          <input type="hidden" name="stream" id="stream" value="">
 
             <div class="field ui input">
-              <select class="ui dropdown" id="type" disabled="disabled">
-                <option value="">Type</option>
-                <option value="download">Download</option>
-                <option value="stream">Stream</option>
-              </select>
-              <a class="ui tag label" id="amount_label">
-                $0
-              </a>
+              <div class="ui teal image label">
+                Download
+                <div class="detail" id="download_label">$</div>
+              </div>
+              <div class="ui blue image label">
+                Stream
+                <div class="detail" id="stream_label">$</div>
+              </div>
+
+
             </div>
 
             <div class="field">
