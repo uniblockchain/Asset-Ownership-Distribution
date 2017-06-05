@@ -47,12 +47,14 @@ $(document).ready(function () {
 
     var download = parseFloat($('#download').val())
     var stream = parseFloat($('#stream').val())
-    var count = $('#count').val()
+    var download_count = $('#download_count').val()
+    var stream_count = $('#stream_count').val()
+
     var iswcNo = $('#hidden_iswc').val()
 
     var total = {
-      'download': download * count,
-      'stream': stream * count
+      'download': download * download_count,
+      'stream': stream * stream_count
     }
 
     loadTrackdataReport(iswcNo, total)
