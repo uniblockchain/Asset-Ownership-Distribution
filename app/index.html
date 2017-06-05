@@ -212,27 +212,24 @@
           <input type="hidden" name="download" id="download" value="">
           <input type="hidden" name="stream" id="stream" value="">
 
-            <div class="field ui input">
-              <div class="ui teal image label">
-                Download
-                <div class="detail" id="download_label">$</div>
-              </div>
-              <div class="ui blue image label">
-                Stream
-                <div class="detail" id="stream_label">$</div>
-              </div>
-            </div>
+
 
             <div class="field">
               <label>Download</label>
-              <input type="number" id="download_count" placeholder="Count" disabled="disabled">
+              <div class="ui right labeled input fluid">
+                <input type="number" id="download_count" placeholder="# of downloads" disabled="disabled">
+                <div class="ui grey label" id="download_label">...</div>
+              </div>
             </div>
             <div class="field">
               <label>Stream</label>
-              <input type="number" id="stream_count" placeholder="Count" disabled="disabled">
+              <div class="ui right labeled input fluid">
+                <input type="number" id="stream_count" placeholder="# of streams" disabled="disabled">
+                <div class="ui grey label" id="stream_label">...</div>
+              </div>
             </div>
 
-            <button id="scSearh" class="ui fluid teal button" type="submit">Submit</button>
+            <button id="scSearh" class="ui fluid green button" type="submit">Calculate</button>
           </form>
         </div>
 

@@ -29,8 +29,8 @@ $(document).ready(function () {
         'download': result[0],
         'stream': result[1]
       }
-      $('#download_label').html('$ ' + perRate['download'])
-      $('#stream_label').html('$ ' + perRate['stream'])
+      $('#download_label').html('@ $ ' + perRate['download'] + ' each')
+      $('#stream_label').html('@ $ ' + perRate['stream'] + ' each')
       $('#download').val(perRate['download'])
       $('#stream').val(perRate['stream'])
     })
