@@ -1,6 +1,19 @@
 var accounts
 var account
 
+var holders = {
+  'name': {
+    'publish': true,
+    'record': true,
+    'revenue': true
+  },
+  'count': {
+    'publish': 5,
+    'record': 7,
+    'revenue': 7
+  }
+}
+
 $(document).on('click', '#txs li', function () {
   var txnid = $(this).attr('data-tx')
   getTx(txnid)
@@ -59,6 +72,13 @@ $(document).ready(function () {
 
     loadTrackdataReport(iswcNo, total)
   })
+
+  // disabled/remove holders based on settings
+  $.each(holders.name, function (index, value) {
+    if (value === false) {
+      $('#button_' + index).remove()
+    }
+  })
 })
 
 window.onload = function () {
@@ -109,7 +129,7 @@ window.onload = function () {
   })
 
   // Set settings
-  //   Trackdata.deployed().then(function (instance) {
+  // Trackdata.deployed().then(function (instance) {
   //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
   // })
 }
@@ -292,3 +312,61 @@ function loadTrackdataReport (iswcNo, total) {
     $('#container-wrapper').removeClass('loading')
   })
 }
+
+function addMoreHolders (holder, container_class = 'brown', _this) {
+  var countIndex = countHolders(holder)
+
+  if (holders.count[holder] >= countIndex) {
+    var fieldReturn = '<div class="ui ' + container_class + ' message">'
+    fieldReturn += '<div class="header capitalize"><i class="minus square icon pointer remover" data-holder="' + holder + '"></i> ' + holder + ' Holder</div><hr />'
+    fieldReturn += '<div class="ui form">'
+    fieldReturn += '<div class="fields">'
+    fieldReturn += '<div class="field">'
+    fieldReturn += '<label>Name</label>'
+    fieldReturn += '<input type="text" name="name[' + holder + '][]">'
+    fieldReturn += '</div>'
+    fieldReturn += '<div class="field">'
+    fieldReturn += '<label>Email</label>'
+    fieldReturn += '<input type="email" name="email[' + holder + '][]">'
+    fieldReturn += '</div>'
+    fieldReturn += '<div class="field">'
+    fieldReturn += '<label>ISNI No</label>'
+    fieldReturn += '<input type="number" name="isni[' + holder + '][]">'
+    fieldReturn += '</div>'
+    fieldReturn += '<div class="field">'
+    fieldReturn += '<label>Ownership</label>'
+    fieldReturn += '<input type="number" min="1" max="100" name="percentage[][' + holder + '][]" class="percentage">'
+    fieldReturn += '</div>'
+    fieldReturn += '</div>'
+    fieldReturn += '</div>'
+    fieldReturn += '</div>'
+
+    $('#container-fields').append(fieldReturn)
+    $('#count_' + holder).html(countIndex)
+
+    if (holders.count[holder] == countIndex) {
+      $(_this).addClass('disabled')
+    }
+  }
+
+  return fieldReturn
+}
+
+function countHolders (holder) {
+  return $('#form_right').serializeArray().reduce(function (obj, item) {
+    if (item.name == 'name[' + holder + '][]') {
+      obj = isNaN(obj) ? 1 : obj + 1
+    }
+    return obj
+  }, 1)
+}
+
+$(document).on('click', '.remover', function () {
+  $(this).parent('div').parent('div').remove()
+  var holder = $(this).attr('data-holder')
+  var countIndex = countHolders(holder)
+  $('#count_' + holder).html((countIndex - 1))
+  if (holders.count[holder] >= countIndex) {
+    $('#button_' + holder).removeClass('disabled')
+  }
+})

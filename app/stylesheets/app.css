@@ -9,3 +9,6 @@ ol li {
 .right.aligned.field {
   text-align: right;
 }
+.capitalize{
+  text-transform: capitalize;
+}
