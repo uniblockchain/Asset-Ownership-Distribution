@@ -19,11 +19,13 @@
   <div class="ui container">
     <div class="ui hidden divider"></div>
     <h1><a href="/">SkyBlocks.io</a></h1>
-    <div class="ui stackable grid">
+    <div class="ui stackable grid" id="content-main">
       <div class="ui eleven wide column">
         <div id="container-wrapper" class="ui green">
-
-          <form action="#" id="form_right" name="form_right" method="POST">
+          <form action="#" id="thisfrm" name="thisfrm" method="POST">
+            <div class="ui basic dimmer">
+              <div class="ui text loader">Loading</div>
+            </div>
             <div class="ui fluid form">
               <div class="fields">
                 <div class="field">
@@ -31,8 +33,8 @@
                   <input type="number" required name="iswc" id="iswc-no" placeholder="ISWC No.">
                 </div>
                 <div class="field right aligned">
-                  <div class="ui hidden divider"></div>
-                  <a onclick="fillDataPlease()" href="#">Fill Data</a>
+                  <label>.</label>
+                  <a onclick="fillDataPlease(this)" href="javascript:void(0)" class="ui primary basic button" id="fillData"><i class="pointing left icon"></i> Fill Data</a>
                 </div>
               </div>
 
@@ -56,36 +58,34 @@
                   <p>You can add Publish, Record and Revenue holders.</p>
                 </div>
 
-                <div class="ui labeled button" tabindex="0" id="button_publish" onclick="addMoreHolders('publish','brown', this)">
-                  <div class="ui brown button">
+                <div class="ui labeled button addmore" data-holder="publish" id="button_publish">
+                  <div class="ui button">
                     <i class="plus icon"></i> Publish
                   </div>
-                  <a class="ui basic brown left pointing label" id="count_publish">
+                  <a class="ui basic left pointing label" id="count_publish">
                   0
                 </a>
                 </div>
-                <div class="ui labeled button" tabindex="0" id="button_record" onclick="addMoreHolders('record','orange', this)">
-                  <div class="ui orange button">
+                <div class="ui labeled button addmore" data-holder="record" id="button_record">
+                  <div class="ui button">
                     <i class="plus icon"></i></i> Record
                   </div>
-                  <a class="ui basic left pointing orange label" id="count_record">
+                  <a class="ui basic left pointing label" id="count_record">
                   0
                 </a>
                 </div>
-                <div class="ui labeled button" tabindex="0" id="button_revenue" onclick="addMoreHolders('revenue','yellow', this)">
-                  <div class="ui yellow button">
+                <div class="ui labeled button addmore" data-holder="revenue" id="button_revenue">
+                  <div class="ui button">
                     <i class="plus icon"></i></i> Revenue
                   </div>
-                  <a class="ui basic left pointing yellow label" id="count_revenue">
+                  <a class="ui basic left pointing label" id="count_revenue">
                   0
                 </a>
                 </div>
-
               </div>
 
-
               <div class="ui horizontal divider">~~~~~~~~~</div>
-              <button class="ui positive button" type="submit" id="saveme" name="button" onclick="saveDetails()">Save now</button>
+              <button class="ui positive button" type="submit" id="saveme" name="button">Save now</button>
 
               <div class="ui error message"></div>
             </div>
@@ -107,7 +107,7 @@
           </form>
         </div>
 
-        <div class="ui orange segment">
+        <div class="ui orange segment sticky">
           <h3>Calculation</h3>
           <form class="ui form" id="calculatefrm">
             <input type="hidden" name="iswc" id="hidden_iswc" value="">
@@ -153,24 +153,6 @@
   </div>
   <div class="ui hidden divider"></div>
   <div class="ui hidden divider"></div>
-
-</body>
-
-</html>
-iv>
-<div class="ui hidden divider "></div>
-
-</body>
-
-</html>
-iv>
-<div class="ui hidden divider "></div>
-
-</body>
-
-</html>
-iv>
-<div class="ui hidden divider "></div>
 
 </body>
 

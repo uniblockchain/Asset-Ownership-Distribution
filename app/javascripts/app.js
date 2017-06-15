@@ -11,6 +11,11 @@ var holders = {
     'publish': 5,
     'record': 7,
     'revenue': 7
+  },
+  'colour': {
+    'publish': 'brown',
+    'record': 'orange',
+    'revenue': 'yellow'
   }
 }
 
@@ -20,6 +25,11 @@ $(document).on('click', '#txs li', function () {
 })
 
 $(document).ready(function () {
+  $('.ui.sticky')
+  .sticky({
+    context: '#container-wrapper'
+  })
+
   $('.ui.dropdown')
   .dropdown()
 
@@ -78,6 +88,12 @@ $(document).ready(function () {
     if (value === false) {
       $('#button_' + index).remove()
     }
+  })
+  // add button classes based on settings
+  $('.addmore').each(function (index, value) {
+    var holder = $(this).attr('data-holder')
+    $(this).find('.button').addClass(holders.colour[holder])
+    $(this).find('.label').addClass(holders.colour[holder])
   })
 })
 
@@ -159,43 +175,6 @@ function refreshBalance () {
   document.getElementById('status').innerText = web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), 'ether')
 }
 
-function saveDetails () {
-  var trackStr = {}
-  $('#thisfrm').addClass('loading')
-  var owners = []
-  var totp = 0
-  var iswcno = parseInt($('#iswc-no').val().trim())
-  var songname = $('#song-name').val().trim()
-
-  for (var i = 1; i <= 5; i++) {
-    var n = $('#name-' + i).val()
-    var e = $('#email-' + i).val()
-    var p = $('#per-' + i).val()
-    var isni = $('#isni-' + i).val()
-    totp += p
-    owners.push({'n': n, 'e': e, 'i': isni, 'p': p})
-  }
-
-  var TrackData = {
-    iswcno: iswcno,
-    songname: songname,
-    owners: owners
-  }
-
-  trackStr = JSON.stringify(TrackData)
-
-  $('#thisfrm input').val('')
-  var account_one = web3.eth.coinbase
-  var account_two = web3.eth.coinbase
-
-  Trackdata.deployed().then(function (instance) {
-    return instance.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999})
-  }).then(function (result) {
-    $('#thisfrm').removeClass('loading')
-    $('#txs').append('<li data-tx="' + result.tx + '">' + prettyPrintHash(result.tx, 8) + '</li>')
-  })
-}
-
 function prettyPrintHash (hash, len) {
   return hash.slice(0, len) + '...' + hash.slice(hash.length - len, hash.length)
 }
@@ -224,16 +203,51 @@ $(document).on('change', 'input.percentage', function () {
   })
 })
 
-function fillDataPlease () {
-  $('#iswc-no').val(makeno(5))
-  $('#song-name').val('Work From Home')
+function fillDataPlease (_this) {
+  $(_this).addClass('disabled')
+  var iswc = ($("input[name*='iswc']").val() == '') ? makeno(5) : $("input[name*='iswc']").val()
+  $("input[name*='iswc']").val(iswc)
+  $("input[name*='songname']").val('Work From Home')
 
-  for (var i = 1; i <= 5; i++) {
-    var n = $('#name-' + i).val(makeid(4))
-    var p = $('#per-' + i).val(20)
-    var isni = $('#isni-' + i).val(makeno(5))
-    var e = $('#email-' + i).val(makeid() + '@me.com')
-  }
+  setTimeout(function () {
+    // first row
+    $('#button_publish').trigger('click')
+    $('#button_record').trigger('click')
+    $('#button_revenue').trigger('click')
+    $("input[name*='data[1]name']").val(makeid(4))
+    $("input[name*='data[1]email']").val(makeid() + '@me.com')
+    $("input[name*='data[1]isni']").val(makeno(5))
+    $("input[name*='data[1]percentage']").val(50)
+    $("input[name*='data[2]name']").val(makeid(4))
+    $("input[name*='data[2]email']").val(makeid() + '@me.com')
+    $("input[name*='data[2]isni']").val(makeno(5))
+    $("input[name*='data[2]percentage']").val(50)
+    $("input[name*='data[3]name']").val(makeid(4))
+    $("input[name*='data[3]email']").val(makeid() + '@me.com')
+    $("input[name*='data[3]isni']").val(makeno(5))
+    $("input[name*='data[3]percentage']").val(50)
+
+    // Second row
+    $('#button_publish').trigger('click')
+    $('#button_record').trigger('click')
+    $('#button_revenue').trigger('click')
+    $("input[name*='data[4]name']").val(makeid(4))
+    $("input[name*='data[4]email']").val(makeid() + '@me.com')
+    $("input[name*='data[4]isni']").val(makeno(5))
+    $("input[name*='data[4]percentage']").val(50)
+    $("input[name*='data[5]name']").val(makeid(4))
+    $("input[name*='data[5]email']").val(makeid() + '@me.com')
+    $("input[name*='data[5]isni']").val(makeno(5))
+    $("input[name*='data[5]percentage']").val(50)
+    $("input[name*='data[6]name']").val(makeid(4))
+    $("input[name*='data[6]email']").val(makeid() + '@me.com')
+    $("input[name*='data[6]isni']").val(makeno(5))
+    $("input[name*='data[6]percentage']").val(50)
+
+    $('html, body').animate({
+      scrollTop: $('#saveme').offset().top
+    }, 1000)
+  }, 1000)
 }
 
 function makeid () {
@@ -266,15 +280,17 @@ function loadTrackdata (iswcNo) {
       $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
     } else {
       var retJson = JSON.parse(result)
+      console.log(retJson)
       var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
-      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>ISNI</th> <th class="right aligned">Ownership</th>'
+      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>Holders</th> <th>ISNI</th> <th class="right aligned">Ownership</th>'
       k += '</tr> </thead> <tbody>'
       $.each(retJson.owners, function (key, value) {
         k += '<tr>'
-        k += '<td >' + value.n + '</td>'
-        k += '<td >' + value.e + '</td>'
-        k += '<td >' + value.i + '</td>'
-        k += '<td class="right aligned">' + value.p + '</td>'
+        k += '<td >' + value.name + '</td>'
+        k += '<td >' + value.email + '</td>'
+        k += '<td >' + value.holder + '</td>'
+        k += '<td >' + value.isni + '</td>'
+        k += '<td class="right aligned">' + value.percentage + '</td>'
         k += '</tr>'
       })
       k += '</tbody>'
@@ -295,6 +311,8 @@ function loadTrackdataReport (iswcNo, total) {
       $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
     } else {
       var retJson = JSON.parse(result)
+
+      console.log('loadTrackdataReport - line 315', retJson)
       var k = '<h2><i class="info circle icon"></i> Report Stats</h2>'
       k += '<table class="ui single line table"><thead><tr><th>Name</th><th class="right aligned">Download (<i class="dollar icon"></i>)</th><th class="right aligned">Stream (<i class="dollar icon"></i>)</th></tr></thead><tbody>'
       $.each(retJson.owners, function (key, value) {
@@ -312,30 +330,70 @@ function loadTrackdataReport (iswcNo, total) {
     $('#container-wrapper').removeClass('loading')
   })
 }
+function countHolders (holder) {
+  return $('#thisfrm').serializeArray().reduce(function (obj, item) {
+    if (item.name.indexOf('holder') !== -1) {
+      if (item.value == holder) {
+        obj = isNaN(obj) ? 1 : obj + 1
+      }
+    }
+    return obj
+  }, 1)
+}
 
-function addMoreHolders (holder, container_class = 'brown', _this) {
+function countAllHolders () {
+  return $('#thisfrm').serializeArray().reduce(function (obj, item) {
+    if (item.name.indexOf('holder') !== -1) {
+      obj = isNaN(obj) ? 1 : obj + 1
+    }
+    return obj
+  }, 1)
+}
+
+function getOwners () {
+  return $('#thisfrm').serializeArray().reduce(function (obj, item) {
+    if (item.name.indexOf('data') !== -1) {
+      var index = item.name.substring(item.name.lastIndexOf('[') + 1, item.name.lastIndexOf(']'))
+      var itemName = item.name.substring(item.name.lastIndexOf(']') + 1, item.name.lastIndexOf(''))
+
+      if (index in obj) {
+        obj[index][itemName] = item.value
+      } else {
+        obj[index] = {}
+        obj[index][itemName] = item.value
+      }
+    }
+    return obj
+  }, {})
+}
+
+$(document).on('click', '.addmore', function () {
+  var holder = $(this).attr('data-holder')
   var countIndex = countHolders(holder)
+  var countAllHolder = countAllHolders()
 
   if (holders.count[holder] >= countIndex) {
-    var fieldReturn = '<div class="ui ' + container_class + ' message">'
+    var fieldReturn = '<div class="ui ' + holders.colour[holder] + ' message">'
     fieldReturn += '<div class="header capitalize"><i class="minus square icon pointer remover" data-holder="' + holder + '"></i> ' + holder + ' Holder</div><hr />'
+    fieldReturn += '<input type="hidden" value="' + countAllHolder + '" name="data[' + countAllHolder + ']id">'
+    fieldReturn += '<input type="hidden" value="' + holder + '" name="data[' + countAllHolder + ']holder">'
     fieldReturn += '<div class="ui form">'
     fieldReturn += '<div class="fields">'
     fieldReturn += '<div class="field">'
     fieldReturn += '<label>Name</label>'
-    fieldReturn += '<input type="text" name="name[' + holder + '][]">'
+    fieldReturn += '<input type="text" name="data[' + countAllHolder + ']name">'
     fieldReturn += '</div>'
     fieldReturn += '<div class="field">'
     fieldReturn += '<label>Email</label>'
-    fieldReturn += '<input type="email" name="email[' + holder + '][]">'
+    fieldReturn += '<input type="email" name="data[' + countAllHolder + ']email">'
     fieldReturn += '</div>'
     fieldReturn += '<div class="field">'
     fieldReturn += '<label>ISNI No</label>'
-    fieldReturn += '<input type="number" name="isni[' + holder + '][]">'
+    fieldReturn += '<input type="number" name="data[' + countAllHolder + ']isni">'
     fieldReturn += '</div>'
     fieldReturn += '<div class="field">'
     fieldReturn += '<label>Ownership</label>'
-    fieldReturn += '<input type="number" min="1" max="100" name="percentage[][' + holder + '][]" class="percentage">'
+    fieldReturn += '<input type="number" min="1" max="100" name="data[' + countAllHolder + ']percentage" class="percentage">'
     fieldReturn += '</div>'
     fieldReturn += '</div>'
     fieldReturn += '</div>'
@@ -345,21 +403,14 @@ function addMoreHolders (holder, container_class = 'brown', _this) {
     $('#count_' + holder).html(countIndex)
 
     if (holders.count[holder] == countIndex) {
-      $(_this).addClass('disabled')
+      $(this).addClass('disabled')
     }
+
+    $('html, body').animate({
+      scrollTop: $('#saveme').offset().top
+    }, 1000)
   }
-
-  return fieldReturn
-}
-
-function countHolders (holder) {
-  return $('#form_right').serializeArray().reduce(function (obj, item) {
-    if (item.name == 'name[' + holder + '][]') {
-      obj = isNaN(obj) ? 1 : obj + 1
-    }
-    return obj
-  }, 1)
-}
+})
 
 $(document).on('click', '.remover', function () {
   $(this).parent('div').parent('div').remove()
@@ -370,3 +421,79 @@ $(document).on('click', '.remover', function () {
     $('#button_' + holder).removeClass('disabled')
   }
 })
+
+$(document).on('submit', '#thisfrm', function () {
+  event.preventDefault()
+  // console.log(getOwners())
+  addingTrackData(
+    parseInt($("input[name*='iswc']").val().trim()),
+    $("input[name*='songname']").val().trim(),
+    getOwners()
+  )
+})
+
+$(document).on('submit', '#srchfrm', function () {
+  event.preventDefault()
+  var iswcNo = $('#srchinput').val().trim()
+  $('#srchfrm')[0].reset()
+  loadLoader()
+
+  if (iswcNo === '') {
+    $('#scSearh').attr('disabled', false)
+    return
+  }
+
+  Trackdata.deployed().then(function (instance) {
+    return instance.getSettings()
+  }).then(function (result) {
+    var perRate = {
+      'download': result[0],
+      'stream': result[1]
+    }
+    $('#download_label').html('@ $ ' + perRate['download'] + ' each')
+    $('#stream_label').html('@ $ ' + perRate['stream'] + ' each')
+    $('#download').val(perRate['download'])
+    $('#stream').val(perRate['stream'])
+  })
+
+  loadTrackdata(iswcNo)
+
+  $('#calculatefrm').find('input, button, select').attr('disabled', false)
+  $('#calculatefrm').find('input, button').removeClass('disabled')
+  $('#calculatefrm .ui.dropdown.selection').removeClass('disabled')
+  $('#hidden_iswc').val(iswcNo)
+  $('#scSearh').attr('disabled', false)
+})
+
+function addingTrackData (iswcno, songname, owners) {
+  loadLoader('Please wait adding data to blockchain.....')
+  var trackStr = {}
+  var TrackData = {
+    iswcno: iswcno,
+    songname: songname,
+    owners: owners
+  }
+  trackStr = JSON.stringify(TrackData)
+
+  var account_one = web3.eth.coinbase
+  var account_two = web3.eth.coinbase
+
+  Trackdata.deployed().then(function (instance) {
+    return instance.saveTrackDetails(iswcno, trackStr.toString(), {from: account_one, gas: 999999})
+  }).then(function (result) {
+    $('#thisfrm').fadeOut(800, function () {
+      removeLoader()
+      $('#thisfrm').html('<div class="ui olive message">Successfully logged to blockchain!</div>').fadeIn().delay(2000)
+    })
+    setTimeout(function () {
+      window.location.reload(false)
+    }, 3000)
+  })
+}
+
+function loadLoader (_text = 'Loading...') {
+  $('#content-main .dimmer .text').html(_text).parent().addClass('active')
+}
+function removeLoader () {
+  $('#content-main .dimmer').removeClass('active')
+}
