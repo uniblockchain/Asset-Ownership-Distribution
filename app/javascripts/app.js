@@ -313,6 +313,7 @@ function loadTrackdataReport (iswcNo, total) {
       var retJson = JSON.parse(result)
 
       console.log('loadTrackdataReport - line 315', retJson)
+      drawGraph(retJson)
       var k = '<h2><i class="info circle icon"></i> Report Stats</h2>'
       k += '<table class="ui single line table"><thead><tr><th>Name</th><th class="right aligned">Download (<i class="dollar icon"></i>)</th><th class="right aligned">Stream (<i class="dollar icon"></i>)</th></tr></thead><tbody>'
       $.each(retJson.owners, function (key, value) {
@@ -328,6 +329,57 @@ function loadTrackdataReport (iswcNo, total) {
       $('#container-report').html(k)
     }
     $('#container-wrapper').removeClass('loading')
+  })
+}
+function drawGraph (jsonStats) {
+  Highcharts.chart('theGraph', {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      text: 'Musicteam Rolaty Chart'
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false
+        },
+        showInLegend: true
+      }
+    },
+    series: [{
+      name: 'Brands',
+      colorByPoint: true,
+      data: [{
+        name: 'Microsoft Internet Explorer',
+        y: 56.33
+      }, {
+        name: 'Chrome',
+        y: 24.03,
+        sliced: true,
+        selected: true
+      }, {
+        name: 'Firefox',
+        y: 10.38
+      }, {
+        name: 'Safari',
+        y: 4.77
+      }, {
+        name: 'Opera',
+        y: 0.91
+      }, {
+        name: 'Proprietary or Undetectable',
+        y: 0.2
+      }]
+    }]
   })
 }
 function countHolders (holder) {
