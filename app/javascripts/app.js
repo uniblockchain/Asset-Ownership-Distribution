@@ -19,6 +19,8 @@ var holders = {
   }
 }
 
+var combineHolders = 'isni'
+
 $(document).on('click', '#txs li', function () {
   var txnid = $(this).attr('data-tx')
   getTx(txnid)
@@ -243,10 +245,6 @@ function fillDataPlease (_this) {
     $("input[name*='data[6]email']").val(makeid() + '@me.com')
     $("input[name*='data[6]isni']").val(makeno(5))
     $("input[name*='data[6]percentage']").val(50)
-
-    $('html, body').animate({
-      scrollTop: $('#saveme').offset().top
-    }, 1000)
   }, 1000)
 }
 
@@ -282,19 +280,21 @@ function loadTrackdata (iswcNo) {
       var retJson = JSON.parse(result)
       console.log(retJson)
       var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
-      k += '<table class="ui single line table"> <thead> <tr> <th>Name</th><th>Email</th> <th>Holders</th> <th>ISNI</th> <th class="right aligned">Ownership</th>'
-      k += '</tr> </thead> <tbody>'
       $.each(retJson.owners, function (key, value) {
-        k += '<tr>'
-        k += '<td >' + value.name + '</td>'
-        k += '<td >' + value.email + '</td>'
-        k += '<td >' + value.holder + '</td>'
-        k += '<td >' + value.isni + '</td>'
-        k += '<td class="right aligned">' + value.percentage + '</td>'
-        k += '</tr>'
+        k += '<table class="ui inverted ' + holders.colour[key] + ' table">'
+        k += '<thead class="full-width"> <tr><th><div class="ui ribbon label">' + key.toUpperCase() + '</div>Name</th><th>Email</th><th>ISNI</th> <th class="right aligned">Ownership (%)</th>'
+        k += '</tr> </thead> <tbody>'
+        $.each(value, function (index, item) {
+          k += '<tr class="red">'
+          k += '<td >' + item.name + '</td>'
+          k += '<td >' + item.email + '</td>'
+          k += '<td >' + item.isni + '</td>'
+          k += '<td class="right aligned">' + item.percentage + '</td>'
+          k += '</tr>'
+        })
+        k += '</tbody>'
+        k += '</table>'
       })
-      k += '</tbody>'
-      k += '</table>'
       $('#container-wrapper').html(k)
     }
     $('#container-wrapper').removeClass('loading')
@@ -303,7 +303,7 @@ function loadTrackdata (iswcNo) {
 
 function loadTrackdataReport (iswcNo, total) {
   Trackdata.deployed().then(function (instance) {
-    $('#container-wrapper').addClass('loading')
+    loadLoader()
     return instance.getTrackDetails(iswcNo)
   }).then(function (result) {
     if (result == '') {
@@ -311,24 +311,21 @@ function loadTrackdataReport (iswcNo, total) {
       $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
     } else {
       var retJson = JSON.parse(result)
+      // calulate amount
+      $.each(retJson.owners, function (index, value) {
+        $.each(value, function (key, item) {
+          retJson.owners[index][key].download = item.percentage / 100 * total['download']
+          retJson.owners[index][key].stream = item.percentage / 100 * total['stream']
+        })
+      })
+      retJson.download = total['download']
+      retJson.stream = total['stream']
+      // end of calculation
 
       console.log('loadTrackdataReport - line 315', retJson)
       drawGraph(retJson)
-      var k = '<h2><i class="info circle icon"></i> Report Stats</h2>'
-      k += '<table class="ui single line table"><thead><tr><th>Name</th><th class="right aligned">Download (<i class="dollar icon"></i>)</th><th class="right aligned">Stream (<i class="dollar icon"></i>)</th></tr></thead><tbody>'
-      $.each(retJson.owners, function (key, value) {
-        k += '<tr>'
-        k += '<td >' + value.n + ' <span class="ui left pointing basic label">' + value.i + '</span>' + '</td>'
-        k += '<td class="right aligned">' + value.p / 100 * total['download'] + '</td>'
-        k += '<td class="right aligned">' + value.p / 100 * total['stream'] + '</td>'
-        k += '</tr>'
-      })
-      k += '<tfoot><tr><th><b>Total</b></th><th class="right aligned">' + total['download'] + '</th><th class="right aligned">' + total['stream'] + '</th></tr></tfoot>'
-      k += '</tbody>'
-      k += '</table>'
-      $('#container-report').html(k)
     }
-    $('#container-wrapper').removeClass('loading')
+    removeLoader()
   })
 }
 function drawGraph (jsonStats) {
@@ -419,6 +416,19 @@ function getOwners () {
   }, {})
 }
 
+function reorderData (data) {
+  var output = {}
+  $.each(data, function (index, value) {
+    if (value.holder in output) {
+      output[value.holder].push(value)
+    } else {
+      output[value.holder] = []
+      output[value.holder].push(value)
+    }
+  })
+  return output
+}
+
 $(document).on('click', '.addmore', function () {
   var holder = $(this).attr('data-holder')
   var countIndex = countHolders(holder)
@@ -457,10 +467,9 @@ $(document).on('click', '.addmore', function () {
     if (holders.count[holder] == countIndex) {
       $(this).addClass('disabled')
     }
-
     $('html, body').animate({
-      scrollTop: $('#saveme').offset().top
-    }, 1000)
+      scrollTop: $('#saveme').offset().top - 800
+    })
   }
 })
 
@@ -476,11 +485,11 @@ $(document).on('click', '.remover', function () {
 
 $(document).on('submit', '#thisfrm', function () {
   event.preventDefault()
-  // console.log(getOwners())
+
   addingTrackData(
     parseInt($("input[name*='iswc']").val().trim()),
     $("input[name*='songname']").val().trim(),
-    getOwners()
+    reorderData(getOwners())
   )
 })
 
