@@ -278,7 +278,6 @@ function loadTrackdata (iswcNo) {
       $('#container-wrapper').html('<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>')
     } else {
       var retJson = JSON.parse(result)
-      console.log(retJson)
       var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
       $.each(retJson.owners, function (key, value) {
         k += '<table class="ui inverted ' + holders.colour[key] + ' table">'
@@ -322,73 +321,140 @@ function loadTrackdataReport (iswcNo, total) {
       retJson.stream = total['stream']
       // end of calculation
 
-      console.log('loadTrackdataReport - line 315', retJson)
+      // add download and stream
+      var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
+      $.each(retJson.owners, function (key, value) {
+        k += '<table class="ui inverted ' + holders.colour[key] + ' table">'
+        k += '<thead class="full-width"> <tr><th><div class="ui ribbon label">' + key.toUpperCase() + '</div>Name</th><th>Email</th><th>ISNI</th> <th class="right aligned">Ownership (%)</th><th class="right aligned">Download</th class="right aligned"><th class="right aligned">Stream</th>'
+        k += '</tr> </thead> <tbody>'
+        $.each(value, function (index, item) {
+          k += '<tr class="red">'
+          k += '<td >' + item.name + '</td>'
+          k += '<td >' + item.email + '</td>'
+          k += '<td >' + item.isni + '</td>'
+          k += '<td class="right aligned">' + item.percentage + '</td>'
+          k += '<td class="right aligned">' + item.download + '</td>'
+          k += '<td class="right aligned">' + item.stream + '</td>'
+          k += '</tr>'
+        })
+        k += '<tfoot><tr><th>Total</th><th></th><th></th><th></th><th class="right aligned">' + retJson.download + '</th><th class="right aligned">' + retJson.stream + '</th></tr></tfoot>'
+        k += '</tbody>'
+        k += '</table>'
+      })
+      $('#container-wrapper').html(k)
+      // end download and stream
+
       drawGraph(retJson)
     }
     removeLoader()
   })
 }
 function drawGraph (jsonStats) {
-  for (i = 0; i < jsonStats.owners.length; i++) {
-    var container = document.createElement('div')
-    document.body.appendChild('')
-    var thisgraph = 'graph' + i
-    $('#container-graph').append('<div id="' + thisgraph + '"></div>')
+  var categories = []
+  var download = []
+  var stream = []
 
-    console.log(thisgraph);
+  $.each(jsonStats.owners, function (index, value) {
+    var thisgraph = 'graph' + index
+    $('#container-graph').append('<div id="' + thisgraph + '" class="eight wide column"></div>')
 
-    // Highcharts.chart({
-    //   chart: {
-    //     plotBackgroundColor: null,
-    //     plotBorderWidth: null,
-    //     plotShadow: false,
-    //     type: 'pie'
-    //   },
-    //   title: {
-    //     text: 'Musicteam Rolaty Chart for ' +
-    //   },
-    //   tooltip: {
-    //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    //   },
-    //   plotOptions: {
-    //     pie: {
-    //       allowPointSelect: true,
-    //       cursor: 'pointer',
-    //       dataLabels: {
-    //         enabled: false
-    //       },
-    //       showInLegend: true
-    //     }
-    //   },
-    //   series: [{
-    //     name: 'Brands',
-    //     colorByPoint: true,
-    //     data: [{
-    //       name: 'Microsoft Internet Explorer',
-    //       y: 56.33
-    //     }, {
-    //       name: 'Chrome',
-    //       y: 24.03,
-    //       sliced: true,
-    //       selected: true
-    //     }, {
-    //       name: 'Firefox',
-    //       y: 10.38
-    //     }, {
-    //       name: 'Safari',
-    //       y: 4.77
-    //     }, {
-    //       name: 'Opera',
-    //       y: 0.91
-    //     }, {
-    //       name: 'Proprietary or Undetectable',
-    //       y: 0.2
-    //     }]
-    //   }]
-    // })
-  }
+    var data = []
+    $.each(value, function (key, item) {
+      data.push({
+        name: item.name,
+        y: parseInt(item.percentage)
+      })
+      categories.push(item.name)
+      download.push(item.download)
+      stream.push(item.stream)
+    })
+    drawPie(thisgraph, index.toUpperCase(), 'Percentage', data)
+  })
+  drawBar(categories, [{
+    name: 'Download',
+    data: download
+  }, {
+    name: 'Stream',
+    data: stream
+  }])
 }
 
+function drawBar (categories, data) {
+  Highcharts.chart('container-graph-bar', {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Download and Stream Amount'
+    },
+    subtitle: {
+      text: 'Source: Blockchain Data'
+    },
+    xAxis: {
+      categories: categories,
+      crosshair: true
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Amount ($)'
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+      }
+    },
+    series: data
+  })
+}
+function drawPie (container, title, seriesLabel, data) {
+  console.log([{
+    name: 'Microsoft Internet Explorer',
+    y: 50
+  }, {
+    name: 'Proprietary or Undetectable',
+    y: 50
+  }])
+  Highcharts.chart(container, {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      text: title
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false
+        },
+        showInLegend: true
+      }
+    },
+    series: [{
+      name: seriesLabel,
+      colorByPoint: true,
+      data: data
+    }]
+  })
+}
 function countHolders (holder) {
   return $('#thisfrm').serializeArray().reduce(function (obj, item) {
     if (item.name.indexOf('holder') !== -1) {
