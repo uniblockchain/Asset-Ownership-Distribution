@@ -150,6 +150,11 @@ window.onload = function () {
   // Trackdata.deployed().then(function (instance) {
   //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
   // })
+
+  // Set ratio
+  // Trackdata.deployed().then(function (instance) {
+  //   return instance.setRatio('40', '30', '30', {from: web3.eth.coinbase, gas: 999999})
+  // })
 }
 
 function getTx (txid) {
