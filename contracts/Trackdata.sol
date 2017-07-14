@@ -6,23 +6,31 @@ contract Trackdata {
   mapping(string => string) settings;
   mapping(string => uint) ratio;
 
-  function setSettings(string download, string stream){
-    settings['download'] = download;
-    settings['stream'] = stream;
+  function setSettingsPublish(string download, string stream){
+    settings['download_publish'] = download;
+    settings['stream_publish'] = stream;
   }
-
-  function setRatio(uint publish, uint record, uint revenue){
-    ratio['publish'] = publish;
-    ratio['record'] = record;
-    ratio['revenue'] = revenue;
+  function setSettingsRecord(string download, string stream){
+    settings['download_record'] = download;
+    settings['stream_record'] = stream;
   }
-
-  function getSettings() constant returns (string download, string stream, uint publish, uint record, uint revenue){
-    download = settings['download'];
-    stream = settings['stream'];
-    publish = ratio['stream'];
-    record = ratio['stream'];
-    revenue = ratio['stream'];
+  function setSettingsRevenue(string download, string stream){
+    settings['download_revenue'] = download;
+    settings['stream_revenue'] = stream;
+  }
+  function getSettings() constant returns (
+      string download_publish,
+      string stream_publish,
+      string download_record,
+      string stream_record,
+      string download_revenue,
+      string stream_revenue){
+    download_publish = settings['download_publish'];
+    stream_publish = settings['stream_publish'];
+    download_record = settings['download_record'];
+    stream_record = settings['stream_record'];
+    download_revenue = settings['download_revenue'];
+    stream_revenue = settings['stream_revenue'];
   }
 
   function saveTrackDetails(uint index, string _trackDetails){
