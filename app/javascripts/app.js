@@ -35,11 +35,11 @@ $(document).ready(function () {
   $('.ui.dropdown')
   .dropdown()
 
-  var iswcNo
+  var iswcNo = 0
   $('#srchfrm').on('submit', function (e) {
     e.preventDefault()
     $('#scSearh').attr('disabled', true)
-    iswcNo = $('#srchinput').val().trim()
+    iswcNo = parseInt($('#srchinput').val().trim())
     $('#srchfrm input').val('')
 
     if (iswcNo === '') {
