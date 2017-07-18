@@ -80,18 +80,17 @@ $(document).ready(function () {
     var download = $('#download_count').val()
     var stream = $('#stream_count').val()
 
-    var download_publish_hidden = $('#download_publish_hidden').val()
-    var stream_publish_hidden = $('#stream_publish_hidden').val()
+    var download_publish_hidden = parseFloat($('#download_publish_hidden').val())
+    var stream_publish_hidden = parseFloat($('#stream_publish_hidden').val())
 
-    var download_record_hidden = $('#download_record_hidden').val()
-    var stream_record_hidden = $('#stream_record_hidden').val()
+    var download_record_hidden = parseFloat($('#download_record_hidden').val())
+    var stream_record_hidden = parseFloat($('#stream_record_hidden').val())
 
-    var download_revenue_hidden = $('#download_revenue_hidden').val()
-    var stream_revenue_hidden = $('#stream_revenue_hidden').val()
+    var download_revenue_hidden = parseFloat($('#download_revenue_hidden').val())
+    var stream_revenue_hidden = parseFloat($('#stream_revenue_hidden').val())
 
     var iswcNo = $('#hidden_iswc').val()
 
-    console.log(download)
 
     var total = {
       'download_publish': download * download_publish_hidden,
