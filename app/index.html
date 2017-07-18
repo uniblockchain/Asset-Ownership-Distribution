@@ -107,31 +107,76 @@
           <h3>Search ISWC No.</h3>
           <form class="ui form" id="srchfrm">
             <div class="field">
-              <input type="number" required id="srchinput" placeholder="ISWC No.">
+              <input type="text" required id="srchinput" placeholder="ISWC No.">
             </div>
             <button id="scSearh" class="ui fluid teal button" type="submit">Submit</button>
           </form>
+        </div>
+
+        <div class="ui red segment">
+          <table class="ui definition table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Download</th>
+                <th>Stream</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Publish</td>
+                <td>
+                  <div class="ui grey label" id="download_publish">...</div>
+                </td>
+                <td>
+                  <div class="ui grey label" id="stream_publish">...</div>
+                </td>
+              </tr>
+              <tr>
+                <td>Record</td>
+                <td>
+                  <div class="ui grey label" id="download_record">...</div>
+                </td>
+                <td>
+                  <div class="ui grey label" id="stream_record">...</div>
+                </td>
+              </tr>
+              <tr>
+                <td>Revenue</td>
+                <td>
+                  <div class="ui grey label" id="download_revenue">...</div>
+                </td>
+                <td>
+                  <div class="ui grey label" id="stream_revenue">...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="ui orange segment sticky">
           <h3>Calculation</h3>
           <form class="ui form" id="calculatefrm">
             <input type="hidden" name="iswc" id="hidden_iswc" value="">
-            <input type="hidden" name="download" id="download" value="">
-            <input type="hidden" name="stream" id="stream" value="">
+            <input type="hidden" name="download_publish_hidden" id="download_publish_hidden" value="">
+            <input type="hidden" name="stream_publish_hidden" id="stream_publish_hidden" value="">
+
+            <input type="hidden" name="download_record_hidden" id="download_record_hidden" value="">
+            <input type="hidden" name="stream_record_hidden" id="stream_record_hidden" value="">
+
+            <input type="hidden" name="download_revenue_hidden" id="download_revenue_hidden" value="">
+            <input type="hidden" name="dowstream_revenue_hiddennload" id="stream_revenue_hidden" value="">
 
             <div class="field">
               <label>Download</label>
               <div class="ui right labeled input fluid">
                 <input type="number" id="download_count" placeholder="# of downloads" disabled="disabled">
-                <div class="ui grey label" id="download_label">...</div>
               </div>
             </div>
             <div class="field">
               <label>Stream</label>
               <div class="ui right labeled input fluid">
                 <input type="number" id="stream_count" placeholder="# of streams" disabled="disabled">
-                <div class="ui grey label" id="stream_label">...</div>
               </div>
             </div>
 

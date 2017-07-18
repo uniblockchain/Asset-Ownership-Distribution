@@ -13,7 +13,7 @@ var holders = {
     'revenue': 7
   },
   'colour': {
-    'publish': 'brown',
+    'publish': 'blue',
     'record': 'orange',
     'revenue': 'yellow'
   }
@@ -50,14 +50,21 @@ $(document).ready(function () {
     Trackdata.deployed().then(function (instance) {
       return instance.getSettings()
     }).then(function (result) {
+      console.log(result)
+
       var perRate = {
-        'download': result[0],
-        'stream': result[1]
+        'download_publish': result[0],
+        'stream_publish': result[1],
+        'download_record': result[2],
+        'stream_record': result[3],
+        'download_revenue': result[4],
+        'stream_revenue': result[5]
       }
-      $('#download_label').html('@ $ ' + perRate['download'] + ' each')
-      $('#stream_label').html('@ $ ' + perRate['stream'] + ' each')
-      $('#download').val(perRate['download'])
-      $('#stream').val(perRate['stream'])
+
+      $.each(perRate, function (index, rate) {
+        $('#' + index).html(rate)
+        $('#' + index + '_hidden').val(rate)
+      })
     })
     loadTrackdata(iswcNo)
     $('#calculatefrm').find('input, button, select').attr('disabled', false)
@@ -70,16 +77,29 @@ $(document).ready(function () {
   $('#calculatefrm').on('submit', function (e) {
     e.preventDefault()
 
-    var download = parseFloat($('#download').val())
-    var stream = parseFloat($('#stream').val())
-    var download_count = $('#download_count').val()
-    var stream_count = $('#stream_count').val()
+    var download = $('#download_count').val()
+    var stream = $('#stream_count').val()
+
+    var download_publish_hidden = $('#download_publish_hidden').val()
+    var stream_publish_hidden = $('#stream_publish_hidden').val()
+
+    var download_record_hidden = $('#download_record_hidden').val()
+    var stream_record_hidden = $('#stream_record_hidden').val()
+
+    var download_revenue_hidden = $('#download_revenue_hidden').val()
+    var stream_revenue_hidden = $('#stream_revenue_hidden').val()
 
     var iswcNo = $('#hidden_iswc').val()
 
+    console.log(download)
+
     var total = {
-      'download': download * download_count,
-      'stream': stream * stream_count
+      'download_publish': download * download_publish_hidden,
+      'stream_publish': stream * stream_publish_hidden,
+      'download_record': download * download_record_hidden,
+      'stream_record': stream * stream_record_hidden,
+      'download_revenue': download * download_revenue_hidden,
+      'stream_revenue': stream * stream_revenue_hidden
     }
 
     loadTrackdataReport(iswcNo, total)
@@ -148,7 +168,13 @@ window.onload = function () {
 
   // Set settings
   // Trackdata.deployed().then(function (instance) {
-  //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
+  //   return instance.setSettingsPublish('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
+  // })
+  // Trackdata.deployed().then(function (instance) {
+  //   return instance.setSettingsRecord('0.0915', '0.007', {from: web3.eth.coinbase, gas: 999999})
+  // })
+  // Trackdata.deployed().then(function (instance) {
+  //   return instance.setSettingsRevenue('0.0915', '0.007', {from: web3.eth.coinbase, gas: 999999})
   // })
 }
 
@@ -313,13 +339,26 @@ function loadTrackdataReport (iswcNo, total) {
       // calulate amount
       $.each(retJson.owners, function (index, value) {
         $.each(value, function (key, item) {
-          retJson.owners[index][key].download = item.percentage / 100 * total['download']
-          retJson.owners[index][key].stream = item.percentage / 100 * total['stream']
+          switch (item.holder) {
+            case 'publish':
+              retJson.owners[index][key].download = item.percentage / 100 * total['download_publish']
+              retJson.owners[index][key].stream = item.percentage / 100 * total['stream_publish']
+              break
+            case 'record':
+              retJson.owners[index][key].download = item.percentage / 100 * total['download_record']
+              retJson.owners[index][key].stream = item.percentage / 100 * total['stream_record']
+              break
+            case 'revenue':
+              retJson.owners[index][key].download = item.percentage / 100 * total['download_revenue']
+              retJson.owners[index][key].stream = item.percentage / 100 * total['stream_revenue']
+              break
+          }
         })
       })
-      retJson.download = total['download']
-      retJson.stream = total['stream']
+      retJson.total = total
       // end of calculation
+
+      console.log(retJson)
 
       // add download and stream
       var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>'
@@ -328,6 +367,7 @@ function loadTrackdataReport (iswcNo, total) {
         k += '<thead class="full-width"> <tr><th><div class="ui ribbon label">' + key.toUpperCase() + '</div>Name</th><th>Email</th><th>ISNI</th> <th class="right aligned">Ownership (%)</th><th class="right aligned">Download</th class="right aligned"><th class="right aligned">Stream</th>'
         k += '</tr> </thead> <tbody>'
         $.each(value, function (index, item) {
+          console.log(key)
           k += '<tr class="red">'
           k += '<td >' + item.name + '</td>'
           k += '<td >' + item.email + '</td>'
@@ -337,7 +377,11 @@ function loadTrackdataReport (iswcNo, total) {
           k += '<td class="right aligned">' + item.stream + '</td>'
           k += '</tr>'
         })
-        k += '<tfoot><tr><th>Total</th><th></th><th></th><th></th><th class="right aligned">' + retJson.download + '</th><th class="right aligned">' + retJson.stream + '</th></tr></tfoot>'
+        k += '<tfoot><tr><th>Total</th><th></th><th></th><th></th><th class="right aligned">'
+        k += retJson.total['download_' + key]
+        k += '</th><th class="right aligned">'
+        k += retJson.total['stream_' + key]
+        k += '</th></tr></tfoot>'
         k += '</tbody>'
         k += '</table>'
       })
@@ -567,39 +611,6 @@ $(document).on('submit', '#thisfrm', function () {
     $("input[name*='songname']").val().trim(),
     reorderData(getOwners())
   )
-})
-
-$(document).on('submit', '#srchfrm', function () {
-  event.preventDefault()
-  var iswcNo = $('#srchinput').val().trim()
-  $('#srchfrm')[0].reset()
-  loadLoader()
-
-  if (iswcNo === '') {
-    $('#scSearh').attr('disabled', false)
-    return
-  }
-
-  Trackdata.deployed().then(function (instance) {
-    return instance.getSettings()
-  }).then(function (result) {
-    var perRate = {
-      'download': result[0],
-      'stream': result[1]
-    }
-    $('#download_label').html('@ $ ' + perRate['download'] + ' each')
-    $('#stream_label').html('@ $ ' + perRate['stream'] + ' each')
-    $('#download').val(perRate['download'])
-    $('#stream').val(perRate['stream'])
-  })
-
-  loadTrackdata(iswcNo)
-
-  $('#calculatefrm').find('input, button, select').attr('disabled', false)
-  $('#calculatefrm').find('input, button').removeClass('disabled')
-  $('#calculatefrm .ui.dropdown.selection').removeClass('disabled')
-  $('#hidden_iswc').val(iswcNo)
-  $('#scSearh').attr('disabled', false)
 })
 
 function addingTrackData (iswcno, songname, owners) {
