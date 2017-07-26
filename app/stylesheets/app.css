@@ -12,3 +12,10 @@ ol li {
 .capitalize{
   text-transform: capitalize;
 }
+#container-fields > div {
+  margin-bottom: 10px
+}
+
+.highlighted {
+  border: 2px solid #dc2c2c;
+}

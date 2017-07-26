@@ -210,7 +210,10 @@ function prettyPrintHash (hash, len) {
 $(document).on('change', 'input.percentage', function () {
   var sum = 0
   var limit = 0
-  $('input.percentage').each(function () {
+  var elementRow = $(this).attr('name').replace('percentage', '')
+  var holder = $("input[name='" + elementRow + "holder']").val()
+
+  $('#container-fields div.' + holder + ' input.percentage').each(function () {
     if (limit == 1) {
       $(this).val(0)
       $(this).attr('disabled', 'disabled')
@@ -555,7 +558,7 @@ $(document).on('click', '.addmore', function () {
   var countAllHolder = countAllHolders()
 
   if (holders.count[holder] >= countIndex) {
-    var fieldReturn = '<div class="ui ' + holders.colour[holder] + ' message">'
+    var fieldReturn = '<div class="ui ' + holders.colour[holder] + ' message highlighted">'
     fieldReturn += '<div class="header capitalize"><i class="minus square icon pointer remover" data-holder="' + holder + '"></i> ' + holder + ' Holder</div><hr />'
     fieldReturn += '<input type="hidden" value="' + countAllHolder + '" name="data[' + countAllHolder + ']id">'
     fieldReturn += '<input type="hidden" value="' + holder + '" name="data[' + countAllHolder + ']holder">'
@@ -581,14 +584,20 @@ $(document).on('click', '.addmore', function () {
     fieldReturn += '</div>'
     fieldReturn += '</div>'
 
-    $('#container-fields').append(fieldReturn)
+    if ($('#container-fields').find('.' + holder).length === 0) {
+      $('#container-fields').append('<div class=' + holder + '></div>')
+    }
+
+    $('#container-fields .' + holder).append(fieldReturn)
     $('#count_' + holder).html(countIndex)
 
     if (holders.count[holder] == countIndex) {
       $(this).addClass('disabled')
     }
     $('html, body').animate({
-      scrollTop: $('#saveme').offset().top - 800
+      scrollTop: $('#container-fields .' + holder).offset().top
+    }, 2000, function () {
+      $('div.message').removeClass('highlighted')
     })
   }
 })
