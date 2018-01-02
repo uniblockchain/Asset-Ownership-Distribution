@@ -4,7 +4,9 @@
   "description": "This is a simple Solidity Smart contract and a Decentralised application (DAPP).",
   "main": "truffle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ./",
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,11 @@
   },
   "homepage": "https://github.com/sibizulu/Asset-Ownership-Distribution#readme",
   "dependencies": {
-    "truffle-default-builder": "^2.0.0"
+    "path": "^0.12.7",
+    "web3": "^1.0.0-beta.27",
+    "webpack": "^3.10.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.3.1"
   }
 }
