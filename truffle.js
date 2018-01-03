@@ -3,6 +3,7 @@ module.exports = {
     development: {
       host: '13.82.93.180',
       port: 8545,
+      gas: 4700000,
       network_id: '10101010'
     },
     locals: {
@@ -17,3 +18,5 @@ module.exports = {
     }
   }
 };
+
+// web3.eth.getBlock('pending', function (error, result) { console.log(error, result) } )
