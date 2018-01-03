@@ -60,5 +60,6 @@ typings/
 
 # Config file
 truffle.js
+local.md
 
 build
