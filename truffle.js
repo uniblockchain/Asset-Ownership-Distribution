@@ -1,15 +1,4 @@
-var DefaultBuilder = require('truffle-default-builder')
-
 module.exports = {
-  build: new DefaultBuilder({
-    'index.html': 'index.html',
-    'app.js': [
-      'javascripts/app.js'
-    ],
-    'app.css': [
-      'stylesheets/app.css'
-    ]
-  }),
   networks: {
     development: {
       host: '13.82.93.180',
@@ -26,6 +15,5 @@ module.exports = {
       port: 80,
       network_id: '*'
     }
-
   }
-}
+};
