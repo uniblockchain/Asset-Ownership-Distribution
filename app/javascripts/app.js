@@ -174,29 +174,22 @@ window.onload = function() {
     account = accounts[0];
     refreshBalance();
   });
-  //
-  // trackDataInstance.setSettings('0.091', '0.0011', {
+
+  // trackDataInstance.setSettingsPublish('0.091', '0.0011', {
   //   from: web3.eth.coinbase,
   //   gas: 999999
   // });
-  // trackDataInstance.setRatio('40', '30', '30', {
+  // trackDataInstance.setSettingsRecord('0.0915', '0.007', {
   //   from: web3.eth.coinbase,
   //   gas: 999999
   // });
-
-  // Set settings
-  // Trackdata.deployed().then(function (instance) {
-  //   return instance.setSettings('0.091', '0.0011', {from: web3.eth.coinbase, gas: 999999})
-  // })
-
-  // Set ratio
-  // Trackdata.deployed().then(function (instance) {
-  //   return instance.setRatio('40', '30', '30', {from: web3.eth.coinbase, gas: 999999})
-  // })
+  // trackDataInstance.setSettingsRevenue('0.001', '0.001', {
+  //   from: web3.eth.coinbase,
+  //   gas: 999999
+  // });
 };
 
 function getTx(txid) {
-  var trck = Trackdata.deployed();
   web3.eth.getTransaction(txid, function(errr, ress) {
     if (errr) {
       console.log('Error ' + errr);
@@ -320,7 +313,7 @@ function makeno(len) {
 }
 
 function loadTrackdata(iswcNo) {
-  result = trackDataInstance.getTrackDetails.call(iswcNo);
+  var result = trackDataInstance.getTrackDetails.call(iswcNo);
   if (result == '') {
     $('#mhead').text('Invalid ISWC No');
     $('#container-wrapper').html(
@@ -353,68 +346,62 @@ function loadTrackdata(iswcNo) {
 }
 
 function loadTrackdataReport(iswcNo, total) {
-  Trackdata.deployed()
-    .then(function(instance) {
-      loadLoader();
-      return instance.getTrackDetails(iswcNo);
-    })
-    .then(function(result) {
-      if (result == '') {
-        $('#mhead').text('Invalid ISWC No');
-        $('#container-wrapper').html(
-          '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>'
-        );
-      } else {
-        var retJson = JSON.parse(result);
-        // calulate amount
-        $.each(retJson.owners, function(index, value) {
-          $.each(value, function(key, item) {
-            retJson.owners[index][key].download =
-              item.percentage / 100 * total['download'];
-            retJson.owners[index][key].stream =
-              item.percentage / 100 * total['stream'];
-          });
-        });
-        retJson.download = total['download'];
-        retJson.stream = total['stream'];
-        // end of calculation
+  var result = trackDataInstance.getTrackDetails.call(iswcNo);
 
-        // add download and stream
-        var k =
-          '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>';
-        $.each(retJson.owners, function(key, value) {
-          k += '<table class="ui inverted ' + holders.colour[key] + ' table">';
-          k +=
-            '<thead class="full-width"> <tr><th><div class="ui ribbon label">' +
-            key.toUpperCase() +
-            '</div>Name</th><th>Email</th><th>ISNI</th> <th class="right aligned">Ownership (%)</th><th class="right aligned">Download</th class="right aligned"><th class="right aligned">Stream</th>';
-          k += '</tr> </thead> <tbody>';
-          $.each(value, function(index, item) {
-            k += '<tr class="red">';
-            k += '<td >' + item.name + '</td>';
-            k += '<td >' + item.email + '</td>';
-            k += '<td >' + item.isni + '</td>';
-            k += '<td class="right aligned">' + item.percentage + '</td>';
-            k += '<td class="right aligned">' + item.download + '</td>';
-            k += '<td class="right aligned">' + item.stream + '</td>';
-            k += '</tr>';
-          });
-          k +=
-            '<tfoot><tr><th>Total</th><th></th><th></th><th></th><th class="right aligned">' +
-            retJson.download +
-            '</th><th class="right aligned">' +
-            retJson.stream +
-            '</th></tr></tfoot>';
-          k += '</tbody>';
-          k += '</table>';
-        });
-        $('#container-wrapper').html(k);
-        // end download and stream
-
-        drawGraph(retJson);
-      }
-      removeLoader();
+  if (result == '') {
+    $('#mhead').text('Invalid ISWC No');
+    $('#container-wrapper').html(
+      '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>'
+    );
+  } else {
+    var retJson = JSON.parse(result);
+    // calulate amount
+    $.each(retJson.owners, function(index, value) {
+      $.each(value, function(key, item) {
+        retJson.owners[index][key].download =
+          item.percentage / 100 * total['download'];
+        retJson.owners[index][key].stream =
+          item.percentage / 100 * total['stream'];
+      });
     });
+    retJson.download = total['download'];
+    retJson.stream = total['stream'];
+    // end of calculation
+
+    // add download and stream
+    var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>';
+    $.each(retJson.owners, function(key, value) {
+      k += '<table class="ui inverted ' + holders.colour[key] + ' table">';
+      k +=
+        '<thead class="full-width"> <tr><th><div class="ui ribbon label">' +
+        key.toUpperCase() +
+        '</div>Name</th><th>Email</th><th>ISNI</th> <th class="right aligned">Ownership (%)</th><th class="right aligned">Download</th class="right aligned"><th class="right aligned">Stream</th>';
+      k += '</tr> </thead> <tbody>';
+      $.each(value, function(index, item) {
+        k += '<tr class="red">';
+        k += '<td >' + item.name + '</td>';
+        k += '<td >' + item.email + '</td>';
+        k += '<td >' + item.isni + '</td>';
+        k += '<td class="right aligned">' + item.percentage + '</td>';
+        k += '<td class="right aligned">' + item.download + '</td>';
+        k += '<td class="right aligned">' + item.stream + '</td>';
+        k += '</tr>';
+      });
+      k +=
+        '<tfoot><tr><th>Total</th><th></th><th></th><th></th><th class="right aligned">' +
+        retJson.download +
+        '</th><th class="right aligned">' +
+        retJson.stream +
+        '</th></tr></tfoot>';
+      k += '</tbody>';
+      k += '</table>';
+    });
+    $('#container-wrapper').html(k);
+    // end download and stream
+
+    drawGraph(retJson);
+  }
+  removeLoader();
 }
 function drawGraph(jsonStats) {
   var categories = [];
@@ -685,47 +672,6 @@ $(document).on('submit', '#thisfrm', function() {
       .trim(),
     reorderData(getOwners())
   );
-});
-
-$(document).on('submit', '#srchfrm', function() {
-  event.preventDefault();
-  var iswcNo = $('#srchinput')
-    .val()
-    .trim();
-  $('#srchfrm')[0].reset();
-  loadLoader();
-
-  if (iswcNo === '') {
-    $('#scSearh').attr('disabled', false);
-    return;
-  }
-
-  Trackdata.deployed()
-    .then(function(instance) {
-      return instance.getSettings();
-    })
-    .then(function(result) {
-      var perRate = {
-        download: result[0],
-        stream: result[1]
-      };
-      $('#download_label').html('@ $ ' + perRate['download'] + ' each');
-      $('#stream_label').html('@ $ ' + perRate['stream'] + ' each');
-      $('#download').val(perRate['download']);
-      $('#stream').val(perRate['stream']);
-    });
-
-  loadTrackdata(iswcNo);
-
-  $('#calculatefrm')
-    .find('input, button, select')
-    .attr('disabled', false);
-  $('#calculatefrm')
-    .find('input, button')
-    .removeClass('disabled');
-  $('#calculatefrm .ui.dropdown.selection').removeClass('disabled');
-  $('#hidden_iswc').val(iswcNo);
-  $('#scSearh').attr('disabled', false);
 });
 
 function addingTrackData(iswcno, songname, owners) {
