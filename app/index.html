@@ -7,17 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css" />
-  <link rel="stylesheet" href="./app.css" />
-
+  <link rel="stylesheet" href="./stylesheets/app.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="./javascripts/web3.min.js"></script>
   <script src="./app.js"></script>
 </head>
 
 <body>
-
   <div class="ui container">
     <div class="ui hidden divider"></div>
     <h1><a href="/">SkyBlocks.io</a></h1>
@@ -32,11 +31,11 @@
               <div class="fields">
                 <div class="field">
                   <label>ISWC No.</label>
-                  <input type="number" required name="iswc" id="iswc-no" placeholder="ISWC No.">
+                  <input type="text" required name="iswc" id="iswc-no" placeholder="ISWC No.">
                 </div>
                 <div class="field right aligned">
                   <label>.</label>
-                  <a onclick="fillDataPlease(this)" href="javascript:void(0)" class="ui primary basic button" id="fillData"><i class="pointing left icon"></i> Fill Data</a>
+                  <a href="javascript:void(0)" class="ui primary basic button" id="fillData"><i class="pointing left icon"></i> Fill Data</a>
                 </div>
               </div>
 
@@ -107,7 +106,7 @@
           <h3>Search ISWC No.</h3>
           <form class="ui form" id="srchfrm">
             <div class="field">
-              <input type="number" required id="srchinput" placeholder="ISWC No.">
+              <input type="text" required id="srchinput" placeholder="ISWC No.">
             </div>
             <button id="scSearh" class="ui fluid teal button" type="submit">Submit</button>
           </form>
