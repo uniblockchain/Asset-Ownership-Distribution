@@ -6,6 +6,8 @@ contract Trackdata {
 	struct TrackDetails {
 
 		string details;
+		string iswc;
+		string mpn;      // music project name
 		bool used;
 	}
 	mapping(bytes32 => TrackDetails) track;
@@ -42,16 +44,20 @@ contract Trackdata {
 		stream_revenue = settings['stream_revenue'];
 	}
 
-	function saveTrackDetails(bytes32 index, string _trackDetails) public {
+	function saveTrackDetails(bytes32 _isrc, string _iswc, string _mpn, string _trackDetails) public {
 		
-		require(int(index) != 0 && bytes(_trackDetails).length != 0);
-		require(track[index].used != true);
-		track[index].details = _trackDetails;
-		track[index].used = true;
+		require(int(_isrc) != 0 && bytes(_trackDetails).length != 0);
+		require(track[_isrc].used != true);
+		track[_isrc].details = _trackDetails;
+		track[_isrc].iswc = _iswc;
+		track[_isrc].mpn = _mpn;
+		track[_isrc].used = true;
 	}
 
-	function getTrackDetails(bytes32 index) public constant returns (string _trackDetails){
-		require(track[index].used == true);
-		_trackDetails = track[index].details;
+	function getTrackDetails(bytes32 isrc) public constant returns (string _trackDetails, string _iswc, string _mpn){
+		require(track[isrc].used == true);
+		_trackDetails = track[isrc].details;
+		_iswc = track[isrc].iswc;
+		_mpn = track[isrc].mpn;
 	}
 }
