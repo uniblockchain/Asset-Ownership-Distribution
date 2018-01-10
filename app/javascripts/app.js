@@ -32,98 +32,12 @@ if (typeof web3 !== 'undefined') {
 
 var TrackdataContract = web3.eth.contract(Trackdata.abi);
 var trackDataInstance = TrackdataContract.at(
-  '0x1b7323be5ea39b6da8b6cdfcdbff17090cdc3984'
+  '0x680094be2d79ab059117a6099e4612c9933c30fe'
 );
 
 $(document).on('click', '#txs li', function() {
   var txnid = $(this).attr('data-tx');
   getTx(txnid);
-});
-
-$(document).ready(function() {
-  $('.ui.sticky').sticky({
-    context: '#container-wrapper'
-  });
-
-  $('.ui.dropdown').dropdown();
-
-  var iswcNo;
-  $('#srchfrm').on('submit', function(e) {
-    e.preventDefault();
-    $('#scSearh').attr('disabled', true);
-    iswcNo = $('#srchinput')
-      .val()
-      .trim();
-    $('#srchfrm input').val('');
-
-    if (iswcNo === '') {
-      $('#scSearh').attr('disabled', false);
-      return;
-    }
-
-    var settings = trackDataInstance.getSettings();
-
-    var perRate = {
-      download: settings[0],
-      stream: settings[1]
-    };
-    $('#download_label').html('@ $ ' + perRate['download'] + ' each');
-    $('#stream_label').html('@ $ ' + perRate['stream'] + ' each');
-    $('#download').val(perRate['download']);
-    $('#stream').val(perRate['stream']);
-
-    loadTrackdata(iswcNo);
-
-    $('#calculatefrm')
-      .find('input, button, select')
-      .attr('disabled', false);
-    $('#calculatefrm')
-      .find('input, button')
-      .removeClass('disabled');
-    $('#calculatefrm .ui.dropdown.selection').removeClass('disabled');
-    $('#hidden_iswc').val(iswcNo);
-    $('#scSearh').attr('disabled', false);
-  });
-
-  $('#fillData').on('click', function(e) {
-    e.preventDefault();
-    fillDataPlease(this);
-  });
-
-  $('#calculatefrm').on('submit', function(e) {
-    e.preventDefault();
-
-    var download = parseFloat($('#download').val());
-    var stream = parseFloat($('#stream').val());
-    var download_count = $('#download_count').val();
-    var stream_count = $('#stream_count').val();
-
-    var iswcNo = $('#hidden_iswc').val();
-
-    var total = {
-      download: download * download_count,
-      stream: stream * stream_count
-    };
-
-    loadTrackdataReport(iswcNo, total);
-  });
-
-  // disabled/remove holders based on settings
-  $.each(holders.name, function(index, value) {
-    if (value === false) {
-      $('#button_' + index).remove();
-    }
-  });
-  // add button classes based on settings
-  $('.addmore').each(function(index, value) {
-    var holder = $(this).attr('data-holder');
-    $(this)
-      .find('.button')
-      .addClass(holders.colour[holder]);
-    $(this)
-      .find('.label')
-      .addClass(holders.colour[holder]);
-  });
 });
 
 window.onload = function() {
@@ -713,3 +627,136 @@ function loadLoader(_text = 'Loading...') {
 function removeLoader() {
   $('#content-main .dimmer').removeClass('active');
 }
+
+const Formatting = {
+  init: function() {
+    var cleave = new Cleave('#iswc-no', {
+      prefix: 'T',
+      delimiter: '-',
+      blocks: [1, 9, 1],
+      numericOnly: true
+    });
+    var cleave = new Cleave('#srchinput', {
+      prefix: 'T',
+      delimiter: '-',
+      blocks: [1, 9, 1],
+      numericOnly: true
+    });
+    var cleave = new Cleave('#isrc-no', {
+      delimiter: '-',
+      blocks: [2, 3, 2, 5],
+      uppercase: true
+    });
+  }
+};
+
+$(document).ready(function() {
+  $('.ui.sticky').sticky({
+    context: '#container-wrapper'
+  });
+
+  $('.ui.dropdown').dropdown();
+
+  Formatting.init();
+
+  var iswcNo;
+  $('#srchfrm').on('submit', function(e) {
+    e.preventDefault();
+    $('#scSearh').attr('disabled', true);
+    iswcNo = $('#srchinput')
+      .val()
+      .trim();
+    $('#srchfrm input').val('');
+
+    if (iswcNo === '') {
+      $('#scSearh').attr('disabled', false);
+      return;
+    }
+
+    var settings = trackDataInstance.getSettings();
+
+    var perRate = {
+      download: settings[0],
+      stream: settings[1]
+    };
+    $('#download_label').html('@ $ ' + perRate['download'] + ' each');
+    $('#stream_label').html('@ $ ' + perRate['stream'] + ' each');
+    $('#download').val(perRate['download']);
+    $('#stream').val(perRate['stream']);
+
+    loadTrackdata(iswcNo);
+
+    $('#calculatefrm')
+      .find('input, button, select')
+      .attr('disabled', false);
+    $('#calculatefrm')
+      .find('input, button')
+      .removeClass('disabled');
+    $('#calculatefrm .ui.dropdown.selection').removeClass('disabled');
+    $('#hidden_iswc').val(iswcNo);
+    $('#scSearh').attr('disabled', false);
+  });
+
+  $('#fillData').on('click', function(e) {
+    e.preventDefault();
+    fillDataPlease(this);
+  });
+
+  $('#calculatefrm').on('submit', function(e) {
+    e.preventDefault();
+
+    var download = parseFloat($('#download').val());
+    var stream = parseFloat($('#stream').val());
+    var download_count = $('#download_count').val();
+    var stream_count = $('#stream_count').val();
+
+    var iswcNo = $('#hidden_iswc').val();
+
+    var total = {
+      download: download * download_count,
+      stream: stream * stream_count
+    };
+
+    loadTrackdataReport(iswcNo, total);
+  });
+
+  // disabled/remove holders based on settings
+  $.each(holders.name, function(index, value) {
+    if (value === false) {
+      $('#button_' + index).remove();
+    }
+  });
+  // add button classes based on settings
+  $('.addmore').each(function(index, value) {
+    var holder = $(this).attr('data-holder');
+    $(this)
+      .find('.button')
+      .addClass(holders.colour[holder]);
+    $(this)
+      .find('.label')
+      .addClass(holders.colour[holder]);
+  });
+
+  $('.ui.form').form({
+    fields: {
+      iswc: {
+        identifier: 'iswc',
+        rules: [
+          {
+            type: 'regExp[/^[T](-)\\d{9}(-)\\d{1}/]',
+            prompt: 'Please enter the right iswc'
+          }
+        ]
+      },
+      songname: {
+        identifier: 'iswc',
+        rules: [
+          {
+            type: 'empty',
+            prompt: 'Please enter the song name'
+          }
+        ]
+      }
+    }
+  });
+});

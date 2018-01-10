@@ -13,6 +13,10 @@ const config = {
     new CopyWebpackPlugin([
       { from: './app/index.html', to: 'index.html' },
       { from: './app/javascripts/web3.min.js', to: 'javascripts/web3.min.js' },
+      {
+        from: './app/javascripts/cleave.min.js',
+        to: 'javascripts/cleave.min.js'
+      },
       { from: './app/stylesheets/app.css', to: 'stylesheets/app.css' }
     ])
   ]

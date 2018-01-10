@@ -12,6 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="./javascripts/cleave.min.js"></script>
   <script src="./javascripts/web3.min.js"></script>
   <script src="./app.js"></script>
 </head>
@@ -23,15 +24,16 @@
     <div class="ui stackable grid" id="content-main">
       <div class="ui eleven wide column">
         <div id="container-wrapper" class="ui green">
-          <form action="#" id="thisfrm" name="thisfrm" method="POST">
+          <form action="#" id="thisfrm" name="thisfrm" method="POST" class="ui form segment">
             <div class="ui basic dimmer">
               <div class="ui text loader">Loading</div>
             </div>
             <div class="ui fluid form">
+
               <div class="fields">
                 <div class="field">
-                  <label>ISWC No.</label>
-                  <input type="text" required name="iswc" id="iswc-no" placeholder="ISWC No.">
+                  <label>ISRC No.</label>
+                  <input type="text" name="isrc" id="isrc-no"  placeholder="ISRC No.">
                 </div>
                 <div class="field right aligned">
                   <label>.</label>
@@ -39,17 +41,26 @@
                 </div>
               </div>
 
-              <div class="field">
-                <label>Song Name</label>
-                <div class="ui search">
-                  <div class="ui icon input">
-                    <input class="prompt" type="text" name="songname" id="song-name" placeholder="Search Song Name..." autocomplete="off">
-                    <i class="search icon"></i>
-                  </div>
-                  <div class="results"></div>
-                </div>
 
+              <div class="two fields">
+                <div class="field">
+                  <label>ISWC No.</label>
+                  <input type="text" name="iswc" id="iswc-no"  placeholder="ISWC No.">
+                </div>
+                <div class="field">
+                  <label>Song Name</label>
+                  <div class="ui search">
+                    <div class="ui icon input">
+                      <input class="prompt" type="text" name="songname" id="song-name" placeholder="Search Song Name..." autocomplete="off">
+                      <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                  </div>
+                </div>
               </div>
+
+
+
 
               <div id="container-fields"></div>
 
