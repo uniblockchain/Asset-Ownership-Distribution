@@ -1,10 +1,9 @@
 pragma solidity ^0.4.4;
 
 
-contract Trackdata {
+contract MusicRecords {
 
 	struct TrackDetails {
-
 		string details;
 		string iswc;
 		string mpn;      // music project name
@@ -28,7 +27,7 @@ contract Trackdata {
 		settings['download_revenue'] = download;
 		settings['stream_revenue'] = stream;
 	}
-	
+
 	function getSettings() constant returns (
 		string download_publish,
 		string stream_publish,

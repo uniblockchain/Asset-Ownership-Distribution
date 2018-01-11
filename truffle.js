@@ -1,20 +1,12 @@
-var DefaultBuilder = require('truffle-default-builder')
-
 module.exports = {
-  build: new DefaultBuilder({
-    'index.html': 'index.html',
-    'app.js': [
-      'javascripts/app.js'
-    ],
-    'app.css': [
-      'stylesheets/app.css'
-    ]
-  }),
   networks: {
     development: {
-      host: '13.82.93.180',
+      host: 'localhost',
+      //host: '13.82.93.180',
       port: 8545,
-      network_id: '10101010'
+      gas: 4700000,
+      //network_id: '10101010'
+      network_id: '*'
     },
     locals: {
       host: '192.168.27.101',
@@ -26,6 +18,7 @@ module.exports = {
       port: 80,
       network_id: '*'
     }
-
   }
-}
+};
+
+// web3.eth.getBlock('pending', function (error, result) { console.log(error, result) } )
