@@ -21,7 +21,7 @@ var holders = {
 
 var combineHolders = 'isni';
 
-const Trackdata = require('../../build/contracts/MusicRecords.json');
+const MusicRecords = require('../../build/contracts/MusicRecords.json');
 
 if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
@@ -30,14 +30,24 @@ if (typeof web3 !== 'undefined') {
   web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
-var TrackdataContract = web3.eth.contract(Trackdata.abi);
-var trackDataInstance = TrackdataContract.at(
-  '0x680094be2d79ab059117a6099e4612c9933c30fe'
+var MusicRecordsContract = web3.eth.contract(MusicRecords.abi);
+var MusicRecordsInstance = MusicRecordsContract.at(
+  '0x67f56b79ad0cb16895911d97ef97ff9b1404fc7d'
 );
 
 $(document).on('click', '#txs li', function() {
   var txnid = $(this).attr('data-tx');
   getTx(txnid);
+});
+
+$(document).on('click', 'body', function() {
+  $('.isni-no').toArray().forEach(function(field){
+    new Cleave(field, {
+      numericOnly: true,
+      delimiter: ' ',
+      blocks: [4,4,4,4]
+    })
+  });
 });
 
 window.onload = function() {
@@ -89,15 +99,15 @@ window.onload = function() {
     refreshBalance();
   });
 
-  // trackDataInstance.setSettingsPublish('0.091', '0.0011', {
+  // MusicRecordsInstance.setSettingsPublish('0.091', '0.0011', {
   //   from: web3.eth.coinbase,
   //   gas: 999999
   // });
-  // trackDataInstance.setSettingsRecord('0.0915', '0.007', {
+  // MusicRecordsInstance.setSettingsRecord('0.0915', '0.007', {
   //   from: web3.eth.coinbase,
   //   gas: 999999
   // });
-  // trackDataInstance.setSettingsRevenue('0.001', '0.001', {
+  // MusicRecordsInstance.setSettingsRevenue('0.001', '0.001', {
   //   from: web3.eth.coinbase,
   //   gas: 999999
   // });
@@ -227,7 +237,7 @@ function makeno(len) {
 }
 
 function loadTrackdata(iswcNo) {
-  var result = trackDataInstance.getTrackDetails.call(iswcNo);
+  var result = MusicRecordsInstance.getTrackDetails.call(iswcNo);
   if (result == '') {
     $('#mhead').text('Invalid ISWC No');
     $('#container-wrapper').html(
@@ -260,7 +270,7 @@ function loadTrackdata(iswcNo) {
 }
 
 function loadTrackdataReport(iswcNo, total) {
-  var result = trackDataInstance.getTrackDetails.call(iswcNo);
+  var result = MusicRecordsInstance.getTrackDetails.call(iswcNo);
 
   if (result == '') {
     $('#mhead').text('Invalid ISWC No');
@@ -536,7 +546,7 @@ $(document).on('click', '.addmore', function() {
     fieldReturn += '<div class="field">';
     fieldReturn += '<label>ISNI No</label>';
     fieldReturn +=
-      '<input type="number" name="data[' + countAllHolder + ']isni">';
+      '<input type="text" name="data[' + countAllHolder + ']isni" class="isni-no">';
     fieldReturn += '</div>';
     fieldReturn += '<div class="field">';
     fieldReturn += '<label>Ownership</label>';
@@ -591,17 +601,17 @@ $(document).on('submit', '#thisfrm', function() {
 function addingTrackData(iswcno, songname, owners) {
   loadLoader('Please wait adding data to blockchain.....');
   var trackStr = {};
-  var TrackData = {
+  var MusicRecords = {
     iswcno: iswcno,
     songname: songname,
     owners: owners
   };
-  trackStr = JSON.stringify(TrackData);
+  trackStr = JSON.stringify(MusicRecords);
 
   var account_one = web3.eth.coinbase;
   var account_two = web3.eth.coinbase;
 
-  trackDataInstance.saveTrackDetails(
+  MusicRecordsInstance.saveTrackDetails(
     iswcno,
     trackStr.toString(),
     {
@@ -630,19 +640,19 @@ function removeLoader() {
 
 const Formatting = {
   init: function() {
-    var cleave = new Cleave('#iswc-no', {
+    new Cleave('#iswc-no', {
       prefix: 'T',
       delimiter: '-',
       blocks: [1, 9, 1],
       numericOnly: true
     });
-    var cleave = new Cleave('#srchinput', {
+    new Cleave('#srchinput', {
       prefix: 'T',
       delimiter: '-',
       blocks: [1, 9, 1],
       numericOnly: true
     });
-    var cleave = new Cleave('#isrc-no', {
+    new Cleave('#isrc-no', {
       delimiter: '-',
       blocks: [2, 3, 2, 5],
       uppercase: true
@@ -673,7 +683,7 @@ $(document).ready(function() {
       return;
     }
 
-    var settings = trackDataInstance.getSettings();
+    var settings = MusicRecordsInstance.getSettings();
 
     var perRate = {
       download: settings[0],
