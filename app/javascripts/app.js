@@ -55,10 +55,11 @@ if (typeof web3 !== 'undefined') {
   // set the provider you want from Web3.providers
   web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
+console.dir(MusicRecords);
 
 var MusicRecordsContract = web3.eth.contract(MusicRecords.abi);
 var MusicRecordsInstance = MusicRecordsContract.at(
-  '0x3770dde12d4c8a61e218a73fe119875b29bd6a4c'
+  '0x325d649820028fc655be735285e6a26eab4f0d2a'
 );
 
 $(document).on('click', '#txs li', function() {
@@ -643,7 +644,7 @@ function addingTrackData(isrc, iswc, name, owners) {
       console.dir(result);
       console.dir(err);
       setTimeout(function() {
-        //window.location.reload(false);
+        window.location.reload(false);
       }, 3000);
     }
   );
