@@ -53,13 +53,15 @@ if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
 } else {
   // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+  web3 = new Web3(
+    new Web3.providers.HttpProvider('http://192.168.27.101:8545')
+  );
 }
 console.dir(MusicRecords);
 
 var MusicRecordsContract = web3.eth.contract(MusicRecords.abi);
 var MusicRecordsInstance = MusicRecordsContract.at(
-  '0x325d649820028fc655be735285e6a26eab4f0d2a'
+  '0x00b7bf2a443b9359327b9e935a5a4db51c2cd0e8'
 );
 
 $(document).on('click', '#txs li', function() {
