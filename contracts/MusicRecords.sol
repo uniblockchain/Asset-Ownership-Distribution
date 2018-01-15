@@ -16,6 +16,9 @@ contract MusicRecords {
     mapping(string => uint) ratio;
     uint  public c;
 
+    event TrackDetailsEvent(bytes32 _isrc);
+    event TrackDetailsUsed(bool _used);
+
     function setSettingsPublish(string download, string stream) public {
         settings['download_publish'] = download;
         settings['stream_publish'] = stream;
@@ -56,9 +59,14 @@ contract MusicRecords {
         track[_isrc].mpn = _mpn;
         track[_isrc].used = true;
 
+        TrackDetailsUsed(track[_isrc].used);
+
     }
 
-    function getTrackDetails(bytes32 isrc) public constant returns (string _trackDetails, bytes32 _iswc, string _mpn) {
+    function getTrackDetails(bytes32 isrc) public returns (string _trackDetails, bytes32 _iswc, string _mpn) {
+        
+        TrackDetailsEvent(isrc);
+        TrackDetailsUsed(track[isrc].used);
         require(track[isrc].used == true);
         _trackDetails = track[isrc].details;
         _iswc = track[isrc].iswc;
