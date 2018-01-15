@@ -63,10 +63,8 @@ contract MusicRecords {
 
     }
 
-    function getTrackDetails(bytes32 isrc) public returns (string _trackDetails, bytes32 _iswc, string _mpn) {
-        
-        TrackDetailsEvent(isrc);
-        TrackDetailsUsed(track[isrc].used);
+    function getTrackDetails(bytes32 isrc) public constant returns (string _trackDetails, bytes32 _iswc, string _mpn) {
+
         require(track[isrc].used == true);
         _trackDetails = track[isrc].details;
         _iswc = track[isrc].iswc;
@@ -85,7 +83,7 @@ contract MusicRecords {
         }
     }
 
-    function getTrackDetailsByIswc(bytes32 _iswc) public constant returns(bytes32[]) {
+    function getTrackDetailsByIswc(bytes32 _iswc) public returns(bytes32[]) {
         getCount(_iswc);
         bytes32[] memory isrc = new bytes32[](c);
 
