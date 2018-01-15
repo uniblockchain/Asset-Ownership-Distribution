@@ -58,7 +58,7 @@ if (typeof web3 !== 'undefined') {
 
 var MusicRecordsContract = web3.eth.contract(MusicRecords.abi);
 var MusicRecordsInstance = MusicRecordsContract.at(
-  '0x67f56b79ad0cb16895911d97ef97ff9b1404fc7d'
+  '0x3770dde12d4c8a61e218a73fe119875b29bd6a4c'
 );
 
 $(document).on('click', '#txs li', function() {
@@ -253,14 +253,15 @@ function makeno(len) {
 
 function loadTrackdata(isrc) {
   var result = MusicRecordsInstance.getTrackDetails.call(isrc);
-  console.dir(result);
+  console.dir(result[0]);
   if (result == '') {
     $('#mhead').text('Invalid ISRC No');
     $('#container-wrapper').html(
       '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISRC No in the chain yet.</div><p>That offer has expired</p></div>'
     );
   } else {
-    var retJson = JSON.parse(result);
+    var retJson = JSON.parse(result[0]);
+    console.dir(retJson);
     var k = '<h2>' + retJson.name + ' - ISRC: ' + retJson.isrc + '</h2>';
     $.each(retJson.owners, function(key, value) {
       k += '<table class="ui inverted ' + holders.colour[key] + ' table">';
@@ -644,7 +645,7 @@ function addingTrackData(isrc, iswc, name, owners) {
       console.dir(result);
       console.dir(err);
       setTimeout(function() {
-        window.location.reload(false);
+        //window.location.reload(false);
       }, 3000);
     }
   );
