@@ -16,9 +16,7 @@ contract MusicRecords {
     mapping(string => uint) ratio;
     uint  public c;
 
-    event TrackDetailsEvent(bytes32 _isrc);
-    event TrackDetailsUsed(bool _used);
-
+    
     function setSettingsPublish(string download, string stream) public {
         settings['download_publish'] = download;
         settings['stream_publish'] = stream;
@@ -59,7 +57,6 @@ contract MusicRecords {
         track[_isrc].mpn = _mpn;
         track[_isrc].used = true;
 
-        TrackDetailsUsed(track[_isrc].used);
 
     }
 
