@@ -19,6 +19,32 @@ var holders = {
   }
 };
 
+const content = [
+  { title: "You Don't Know Love" },
+  { title: 'Shout Out To My Ex' },
+  { title: 'Work From Home' },
+  { title: 'Rockabye' },
+  { title: 'Anguilla' },
+  { title: '7 Years' },
+  { title: 'Fast Car' },
+  { title: 'Pillowalk' },
+  { title: 'Cheap Thrills' },
+  { title: 'All My Friends' },
+  { title: 'Get Ugly' },
+  { title: 'Light It Up' },
+  { title: 'Money' },
+  { title: 'History' },
+  { title: 'Stitches' },
+  { title: 'Here' },
+  { title: 'Roar' },
+  { title: 'Can\t Stop The Feeling' },
+  { title: 'Secret Love Song' },
+  { title: 'Cake By The Ocean' },
+  { title: 'This is what you came for' },
+  { title: 'Running With the Wild Things' },
+  { title: 'Do You Wanna Come Over?' }
+];
+
 var combineHolders = 'isni';
 
 const MusicRecords = require('../../build/contracts/MusicRecords.json');
@@ -41,43 +67,19 @@ $(document).on('click', '#txs li', function() {
 });
 
 $(document).on('click', 'body', function() {
-  $('.isni-no').toArray().forEach(function(field){
-    new Cleave(field, {
-      numericOnly: true,
-      delimiter: ' ',
-      blocks: [4,4,4,4]
-    })
-  });
+  $('.isni-no')
+    .toArray()
+    .forEach(function(field) {
+      new Cleave(field, {
+        numericOnly: true,
+        delimiter: ' ',
+        blocks: [4, 4, 4, 4]
+      });
+    });
 });
 
 window.onload = function() {
   $('.ui.accordion').accordion();
-
-  var content = [
-    { title: "You Don't Know Love" },
-    { title: 'Shout Out To My Ex' },
-    { title: 'Work From Home' },
-    { title: 'Rockabye' },
-    { title: 'Anguilla' },
-    { title: '7 Years' },
-    { title: 'Fast Car' },
-    { title: 'Pillowalk' },
-    { title: 'Cheap Thrills' },
-    { title: 'All My Friends' },
-    { title: 'Get Ugly' },
-    { title: 'Light It Up' },
-    { title: 'Money' },
-    { title: 'History' },
-    { title: 'Stitches' },
-    { title: 'Here' },
-    { title: 'Roar' },
-    { title: 'Can\t Stop The Feeling' },
-    { title: 'Secret Love Song' },
-    { title: 'Cake By The Ocean' },
-    { title: 'This is what you came for' },
-    { title: 'Running With the Wild Things' },
-    { title: 'Do You Wanna Come Over?' }
-  ];
 
   $('.ui.search').search({
     source: content
@@ -172,12 +174,12 @@ $(document).on('change', 'input.percentage', function() {
 
 function fillDataPlease(_this) {
   $(_this).addClass('disabled');
-  var iswc =
-    $("input[name*='iswc']").val() == ''
-      ? makeno(5)
-      : $("input[name*='iswc']").val();
+  const isrc = 'US-S1Z-' + makeno(2) + '-' + makeno(5);
+  const iswc = 'T-' + makeno(9) + '-' + makeno(1);
+  const songName = content[Math.floor(Math.random() * 22 + 1)];
+  $("input[name*='isrc']").val(isrc);
   $("input[name*='iswc']").val(iswc);
-  $("input[name*='songname']").val('Work From Home');
+  $("input[name*='songname']").val(songName.title);
 
   setTimeout(function() {
     // first row
@@ -186,15 +188,22 @@ function fillDataPlease(_this) {
     $('#button_revenue').trigger('click');
     $("input[name*='data[1]name']").val(makeid(4));
     $("input[name*='data[1]email']").val(makeid() + '@me.com');
-    $("input[name*='data[1]isni']").val(makeno(5));
+    $("input[name*='data[1]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
+
     $("input[name*='data[1]percentage']").val(50);
     $("input[name*='data[2]name']").val(makeid(4));
     $("input[name*='data[2]email']").val(makeid() + '@me.com');
-    $("input[name*='data[2]isni']").val(makeno(5));
+    $("input[name*='data[2]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
     $("input[name*='data[2]percentage']").val(50);
     $("input[name*='data[3]name']").val(makeid(4));
     $("input[name*='data[3]email']").val(makeid() + '@me.com');
-    $("input[name*='data[3]isni']").val(makeno(5));
+    $("input[name*='data[3]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
     $("input[name*='data[3]percentage']").val(50);
 
     // Second row
@@ -203,15 +212,21 @@ function fillDataPlease(_this) {
     $('#button_revenue').trigger('click');
     $("input[name*='data[4]name']").val(makeid(4));
     $("input[name*='data[4]email']").val(makeid() + '@me.com');
-    $("input[name*='data[4]isni']").val(makeno(5));
+    $("input[name*='data[4]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
     $("input[name*='data[4]percentage']").val(50);
     $("input[name*='data[5]name']").val(makeid(4));
     $("input[name*='data[5]email']").val(makeid() + '@me.com');
-    $("input[name*='data[5]isni']").val(makeno(5));
+    $("input[name*='data[5]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
     $("input[name*='data[5]percentage']").val(50);
     $("input[name*='data[6]name']").val(makeid(4));
     $("input[name*='data[6]email']").val(makeid() + '@me.com');
-    $("input[name*='data[6]isni']").val(makeno(5));
+    $("input[name*='data[6]isni']").val(
+      makeno(4) + ' ' + makeno(4) + ' ' + makeno(4) + ' ' + makeno(4)
+    );
     $("input[name*='data[6]percentage']").val(50);
   }, 1000);
 }
@@ -230,22 +245,23 @@ function makeid() {
 function makeno(len) {
   var text = '';
   var possible = '0123456789';
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < len; i++) {
     text += possible.charAt(Math.floor(Math.random() * len));
   }
   return text;
 }
 
-function loadTrackdata(iswcNo) {
-  var result = MusicRecordsInstance.getTrackDetails.call(iswcNo);
+function loadTrackdata(isrc) {
+  var result = MusicRecordsInstance.getTrackDetails.call(isrc);
+  console.dir(result);
   if (result == '') {
-    $('#mhead').text('Invalid ISWC No');
+    $('#mhead').text('Invalid ISRC No');
     $('#container-wrapper').html(
-      '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>'
+      '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISRC No in the chain yet.</div><p>That offer has expired</p></div>'
     );
   } else {
     var retJson = JSON.parse(result);
-    var k = '<h2>' + retJson.songname + ' - ISWC: ' + retJson.iswcno + '</h2>';
+    var k = '<h2>' + retJson.name + ' - ISRC: ' + retJson.isrc + '</h2>';
     $.each(retJson.owners, function(key, value) {
       k += '<table class="ui inverted ' + holders.colour[key] + ' table">';
       k +=
@@ -546,7 +562,9 @@ $(document).on('click', '.addmore', function() {
     fieldReturn += '<div class="field">';
     fieldReturn += '<label>ISNI No</label>';
     fieldReturn +=
-      '<input type="text" name="data[' + countAllHolder + ']isni" class="isni-no">';
+      '<input type="text" name="data[' +
+      countAllHolder +
+      ']isni" class="isni-no">';
     fieldReturn += '</div>';
     fieldReturn += '<div class="field">';
     fieldReturn += '<label>Ownership</label>';
@@ -587,23 +605,25 @@ $(document).on('click', '.remover', function() {
 $(document).on('submit', '#thisfrm', function() {
   event.preventDefault();
 
+  const isrc = $("input[name*='isrc']").val();
+  const iswc = $("input[name*='iswc']").val();
+  const songName = $("input[name*='songname']").val();
+
   addingTrackData(
-    $("input[name*='iswc']")
-      .val()
-      .trim(),
-    $("input[name*='songname']")
-      .val()
-      .trim(),
+    isrc.trim(),
+    iswc.trim(),
+    songName.trim(),
     reorderData(getOwners())
   );
 });
 
-function addingTrackData(iswcno, songname, owners) {
+function addingTrackData(isrc, iswc, name, owners) {
   loadLoader('Please wait adding data to blockchain.....');
   var trackStr = {};
   var MusicRecords = {
-    iswcno: iswcno,
-    songname: songname,
+    isrc: isrc,
+    iswc: iswc,
+    name: name,
     owners: owners
   };
   trackStr = JSON.stringify(MusicRecords);
@@ -612,7 +632,9 @@ function addingTrackData(iswcno, songname, owners) {
   var account_two = web3.eth.coinbase;
 
   MusicRecordsInstance.saveTrackDetails(
-    iswcno,
+    isrc,
+    iswc,
+    name,
     trackStr.toString(),
     {
       from: account_one,
@@ -647,10 +669,9 @@ const Formatting = {
       numericOnly: true
     });
     new Cleave('#srchinput', {
-      prefix: 'T',
       delimiter: '-',
-      blocks: [1, 9, 1],
-      numericOnly: true
+      blocks: [2, 3, 2, 5],
+      uppercase: true
     });
     new Cleave('#isrc-no', {
       delimiter: '-',
@@ -672,13 +693,13 @@ $(document).ready(function() {
   var iswcNo;
   $('#srchfrm').on('submit', function(e) {
     e.preventDefault();
+
+    const isrc = $('#srchinput').val();
+
     $('#scSearh').attr('disabled', true);
-    iswcNo = $('#srchinput')
-      .val()
-      .trim();
     $('#srchfrm input').val('');
 
-    if (iswcNo === '') {
+    if (isrc === '') {
       $('#scSearh').attr('disabled', false);
       return;
     }
@@ -694,7 +715,7 @@ $(document).ready(function() {
     $('#download').val(perRate['download']);
     $('#stream').val(perRate['stream']);
 
-    loadTrackdata(iswcNo);
+    loadTrackdata(isrc);
 
     $('#calculatefrm')
       .find('input, button, select')
