@@ -791,3 +791,7 @@ $(document).ready(function() {
     }
   });
 });
+
+var events = MusicRecordsInstance.allEvents(function(error, log) {
+  if (!error) console.dir(log);
+});
