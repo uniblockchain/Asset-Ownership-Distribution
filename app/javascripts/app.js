@@ -253,7 +253,6 @@ function makeno(len) {
 
 function loadTrackdata(isrc) {
   var result = MusicRecordsInstance.getTrackDetails.call(isrc);
-  console.dir(result[0]);
   if (result == '') {
     $('#mhead').text('Invalid ISRC No');
     $('#container-wrapper').html(
@@ -261,7 +260,6 @@ function loadTrackdata(isrc) {
     );
   } else {
     var retJson = JSON.parse(result[0]);
-    console.dir(retJson);
     var k = '<h2>' + retJson.name + ' - ISRC: ' + retJson.isrc + '</h2>';
     $.each(retJson.owners, function(key, value) {
       k += '<table class="ui inverted ' + holders.colour[key] + ' table">';
@@ -286,8 +284,8 @@ function loadTrackdata(isrc) {
   $('#container-wrapper').removeClass('loading');
 }
 
-function loadTrackdataReport(iswcNo, total) {
-  var result = MusicRecordsInstance.getTrackDetails.call(iswcNo);
+function loadTrackdataReport(isrc, total) {
+  var result = MusicRecordsInstance.getTrackDetails.call(isrc);
 
   if (result == '') {
     $('#mhead').text('Invalid ISWC No');
@@ -295,7 +293,7 @@ function loadTrackdataReport(iswcNo, total) {
       '<div class="ui negative fluid message"><div class="header"> Sorry, it looks like we dont have that ISWC No in the chain yet.</div><p>That offer has expired</p></div>'
     );
   } else {
-    var retJson = JSON.parse(result);
+    var retJson = JSON.parse(result[0]);
     // calulate amount
     $.each(retJson.owners, function(index, value) {
       $.each(value, function(key, item) {
@@ -725,7 +723,7 @@ $(document).ready(function() {
       .find('input, button')
       .removeClass('disabled');
     $('#calculatefrm .ui.dropdown.selection').removeClass('disabled');
-    $('#hidden_iswc').val(iswcNo);
+    $('#hidden_isrc').val(isrc);
     $('#scSearh').attr('disabled', false);
   });
 
@@ -742,14 +740,14 @@ $(document).ready(function() {
     var download_count = $('#download_count').val();
     var stream_count = $('#stream_count').val();
 
-    var iswcNo = $('#hidden_iswc').val();
+    const isrc = $('#hidden_isrc').val();
 
     var total = {
       download: download * download_count,
       stream: stream * stream_count
     };
 
-    loadTrackdataReport(iswcNo, total);
+    loadTrackdataReport(isrc, total);
   });
 
   // disabled/remove holders based on settings
