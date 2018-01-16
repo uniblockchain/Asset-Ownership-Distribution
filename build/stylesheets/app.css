@@ -1,0 +1,14 @@
+.modal .content {
+  min-height: 200px;
+}
+
+ol li {
+  cursor: pointer;
+}
+
+.right.aligned.field {
+  text-align: right;
+}
+.capitalize{
+  text-transform: capitalize;
+}
